@@ -20,16 +20,21 @@ package name.raev.kaloyan.kindle.chitanka;
 
 import java.awt.Container;
 import java.awt.GridLayout;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 
 import com.amazon.kindle.kindlet.AbstractKindlet;
 import com.amazon.kindle.kindlet.KindletContext;
+import com.amazon.kindle.kindlet.event.KindleKeyCodes;
 import com.amazon.kindle.kindlet.net.Connectivity;
 import com.amazon.kindle.kindlet.net.ConnectivityHandler;
 import com.amazon.kindle.kindlet.net.NetworkDisabledDetails;
@@ -47,8 +52,25 @@ public class ChitankaKindlet extends AbstractKindlet {
 
 	private KindletContext ctx;
 
+	private Stack pageHistory = new Stack();
+
 	public void create(KindletContext context) {
 		this.ctx = context;
+
+		// handle the Back key to navigate back in the browsing history
+		KeyboardFocusManager.getCurrentKeyboardFocusManager()
+				.addKeyEventDispatcher(new KeyEventDispatcher() {
+					public boolean dispatchKeyEvent(KeyEvent key) {
+						if (key.getKeyCode() == KindleKeyCodes.VK_BACK
+								&& !pageHistory.isEmpty()) {
+							key.consume();
+							// display the previous page from history
+							displayPage((String) pageHistory.pop());
+							return true;
+						}
+						return false;
+					}
+				});
 	}
 
 	public void start() {
@@ -69,9 +91,8 @@ public class ChitankaKindlet extends AbstractKindlet {
 					public void connected() throws InterruptedException {
 						Container root = ctx.getRootContainer();
 						root.removeAll();
-						
-						final KProgress progress = ctx
-								.getProgressIndicator();
+
+						final KProgress progress = ctx.getProgressIndicator();
 						progress.setIndeterminate(true);
 
 						try {
@@ -83,25 +104,31 @@ public class ChitankaKindlet extends AbstractKindlet {
 
 							List entries = feed.getEntries();
 							if (entries != null) {
-								KPanel panel = new KPanel(new GridLayout(
-										30, entries.size() / 30));
+								KPanel panel = new KPanel(new GridLayout(30,
+										entries.size() / 30));
 								root.add(panel);
 
 								Iterator iterator = entries.iterator();
 								while (iterator.hasNext()) {
 									final SyndEntry entry = (SyndEntry) iterator
 											.next();
-									KButton button = new KButton(entry.getTitle());
+									KButton button = new KButton(entry
+											.getTitle());
 									panel.add(button);
 									button.addActionListener(new ActionListener() {
 										public void actionPerformed(
 												ActionEvent e) {
 											String link = entry.getLink();
 											if (link != null) {
+												// push the current page to
+												// history
+												pageHistory.push(opdsUrl);
+												// navigate to the selected page
 												displayPage(link);
 											} else {
 												List links = entry.getLinks();
-												SyndLink txtLink = (SyndLink) links.get(2);
+												SyndLink txtLink = (SyndLink) links
+														.get(2);
 												downloadBook(txtLink.getHref());
 											}
 										}
@@ -124,32 +151,31 @@ public class ChitankaKindlet extends AbstractKindlet {
 					}
 				}, true);
 	}
-	
+
 	private void downloadBook(String href) {
 		KProgress progress = ctx.getProgressIndicator();
 		progress.setIndeterminate(true);
-		
+
 		try {
 			Utils.downloadZippedBook(href);
 			Utils.rescanDocuments();
 		} catch (Throwable t) {
 			Container root = ctx.getRootContainer();
 			root.removeAll();
-			
+
 			StringWriter sw = new StringWriter();
 			t.printStackTrace(new PrintWriter(sw));
-			
+
 			root.add(new KTextArea(sw.toString()));
 			root.repaint();
 		}
-		
+
 		progress.setIndeterminate(false);
 		progress.setString("Книгата е свалена");
 	}
 
 	public static void main(String[] args) throws Exception {
-		String book = 
-				"http://chitanka.info/book/3046-gotvarska-kniga-za-myzhe.txt.zip";
+		String book = "http://chitanka.info/book/3046-gotvarska-kniga-za-myzhe.txt.zip";
 		Utils.downloadZippedBook(book);
 	}
 
