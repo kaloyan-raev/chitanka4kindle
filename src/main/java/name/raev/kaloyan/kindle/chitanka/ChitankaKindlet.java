@@ -108,7 +108,10 @@ public class ChitankaKindlet extends AbstractKindlet {
 									});
 								}
 
-								panel.getComponent(0).requestFocus();
+								// set the input focus on the first item
+								if (panel.getComponentCount() > 0) {
+									panel.getComponent(0).requestFocus();
+								}
 							}
 						} catch (Throwable t) {
 							StringWriter sw = new StringWriter();
