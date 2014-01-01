@@ -44,6 +44,9 @@
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 							<mainClass>${project.groupId}.${project.artifactId}.ChitankaKindlet</mainClass>
 						</manifest>
+						<manifestEntries>
+							<Amazon-Cover-Image>logo.jpg</Amazon-Cover-Image>
+						</manifestEntries>
 					</archive>
 				</configuration>
 			</plugin>
