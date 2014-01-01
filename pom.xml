@@ -1,0 +1,150 @@
+<!--
+	Copyright 2014 Kaloyan Raev
+	
+	This file is part of chitanka4kindle.
+	
+	chitanka4kindle is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	 
+	chitanka4kindle is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>name.raev.kaloyan.kindle</groupId>
+	<artifactId>chitanka</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>Читанка</name>
+	<description>Позволява разглеждане и сваляне на книги от каталога Читанка директно от Kindle без необходимост от компютър</description>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.4</source>
+					<target>1.4</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<mainClass>${project.groupId}.${project.artifactId}.ChitankaKindlet</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jarsigner-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<id>sign-dkTest</id>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+						<configuration>
+							<alias>dkTest</alias>
+						</configuration>
+					</execution>
+					<execution>
+						<id>sign-diTest</id>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+						<configuration>
+							<alias>diTest</alias>
+						</configuration>
+					</execution>
+					<execution>
+						<id>sign-dnTest</id>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+						<configuration>
+							<alias>dnTest</alias>
+						</configuration>
+					</execution>
+				</executions>
+				<configuration>
+					<keystore>${project.basedir}/res/developer.keystore</keystore>
+					<storepass>password</storepass>
+					<keypass></keypass>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<minimizeJar>true</minimizeJar>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.8</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>${project.artifactId}</artifactId>
+									<version>${project.version}</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+									<destFileName>${project.artifactId}.azw2</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>com.amazon.kindle</groupId>
+			<artifactId>kindlet</artifactId>
+			<version>1.2</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>rome</groupId>
+			<artifactId>rome</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+	<organization>
+		<name>Калоян Раев</name>
+	</organization>
+</project>
