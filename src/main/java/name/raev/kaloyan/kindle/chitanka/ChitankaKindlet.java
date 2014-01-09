@@ -18,8 +18,12 @@
  */
 package name.raev.kaloyan.kindle.chitanka;
 
+import java.awt.Component;
 import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
@@ -27,10 +31,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Stack;
+
+import org.kwt.ui.KWTSelectableLabel;
 
 import com.amazon.kindle.kindlet.AbstractKindlet;
 import com.amazon.kindle.kindlet.KindletContext;
@@ -38,21 +41,23 @@ import com.amazon.kindle.kindlet.event.KindleKeyCodes;
 import com.amazon.kindle.kindlet.net.Connectivity;
 import com.amazon.kindle.kindlet.net.ConnectivityHandler;
 import com.amazon.kindle.kindlet.net.NetworkDisabledDetails;
-import com.amazon.kindle.kindlet.ui.KButton;
+import com.amazon.kindle.kindlet.ui.KLabel;
+import com.amazon.kindle.kindlet.ui.KLabelMultiline;
 import com.amazon.kindle.kindlet.ui.KPanel;
 import com.amazon.kindle.kindlet.ui.KProgress;
 import com.amazon.kindle.kindlet.ui.KTextArea;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.feed.synd.SyndLink;
-import com.sun.syndication.io.SyndFeedInput;
-import com.sun.syndication.io.XmlReader;
+import com.amazon.kindle.kindlet.ui.border.KLineBorder;
 
 public class ChitankaKindlet extends AbstractKindlet {
+
+	private final static int PAGE_SIZE = 20;
 
 	private KindletContext ctx;
 
 	private Stack pageHistory = new Stack();
+
+	private OpdsPage currentPage;
+	private int pageIndex;
 
 	public void create(KindletContext context) {
 		this.ctx = context;
@@ -61,13 +66,40 @@ public class ChitankaKindlet extends AbstractKindlet {
 		KeyboardFocusManager.getCurrentKeyboardFocusManager()
 				.addKeyEventDispatcher(new KeyEventDispatcher() {
 					public boolean dispatchKeyEvent(KeyEvent key) {
-						if (key.getKeyCode() == KindleKeyCodes.VK_BACK
-								&& !pageHistory.isEmpty()) {
+						if (key.isConsumed()
+								|| key.getID() == KeyEvent.KEY_RELEASED)
+							return false;
+
+						switch (key.getKeyCode()) {
+						case KindleKeyCodes.VK_BACK:
+							if (!pageHistory.isEmpty()) {
+								key.consume();
+								// display the previous page from history
+								displayPage((String) pageHistory.pop());
+								return true;
+							}
+							break;
+
+						case KindleKeyCodes.VK_LEFT_HAND_SIDE_TURN_PAGE:
+						case KindleKeyCodes.VK_RIGHT_HAND_SIDE_TURN_PAGE:
 							key.consume();
-							// display the previous page from history
-							displayPage((String) pageHistory.pop());
+							try {
+								nextPage();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							return true;
+
+						case KindleKeyCodes.VK_TURN_PAGE_BACK:
+							key.consume();
+							try {
+								previousPage();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 							return true;
 						}
+
 						return false;
 					}
 				});
@@ -91,34 +123,53 @@ public class ChitankaKindlet extends AbstractKindlet {
 					public void connected() throws InterruptedException {
 						Container root = ctx.getRootContainer();
 						root.removeAll();
+						root.setLayout(new GridBagLayout());
 
-						final KProgress progress = ctx.getProgressIndicator();
+						GridBagConstraints c = new GridBagConstraints();
+						c.fill = GridBagConstraints.HORIZONTAL;
+						c.weightx = 1.0;
+						c.gridx = 0;
+						c.gridy = GridBagConstraints.RELATIVE;
+						c.insets = new Insets(8, 32, 8, 16);
+
+						KProgress progress = ctx.getProgressIndicator();
 						progress.setIndeterminate(true);
 
 						try {
-							URL feedUrl = new URL(opdsUrl);
-							SyndFeedInput input = new SyndFeedInput();
-							SyndFeed feed = input.build(new XmlReader(feedUrl));
+							currentPage = new OpdsPage(opdsUrl);
 
-							ctx.setSubTitle(feed.getTitle());
+							root.add(
+									new KLabelMultiline(currentPage.getTitle()),
+									c);
+							root.add(
+									new KLabel("Общо ".concat(Integer.toString(
+											currentPage.getItemsCount())
+											.concat(" заглавия"))), c);
 
-							List entries = feed.getEntries();
-							if (entries != null) {
-								KPanel panel = new KPanel(new GridLayout(30,
-										entries.size() / 30));
-								root.add(panel);
+							pageIndex = 0;
+							OpdsItem[] opdsItems = currentPage.getItems(
+									pageIndex, PAGE_SIZE);
 
-								Iterator iterator = entries.iterator();
-								while (iterator.hasNext()) {
-									final SyndEntry entry = (SyndEntry) iterator
-											.next();
-									KButton button = new KButton(entry
-											.getTitle());
-									panel.add(button);
-									button.addActionListener(new ActionListener() {
+							final KPanel panel = new KPanel(new GridLayout(
+									PAGE_SIZE, 1));
+
+							for (int i = 0; i < PAGE_SIZE; i++) {
+								KWTSelectableLabel item = new KWTSelectableLabel();
+								panel.add(item);
+
+								if (i < opdsItems.length) {
+									OpdsItem opdsItem = opdsItems[i];
+									item.setText(opdsItem.getTitle());
+									item.setFocusable(true);
+
+									final int index = i;
+									item.addActionListener(new ActionListener() {
 										public void actionPerformed(
 												ActionEvent e) {
-											String link = entry.getLink();
+											OpdsItem opdsItem = currentPage
+													.getItem(pageIndex + index);
+											String link = opdsItem
+													.getNavigationLink();
 											if (link != null) {
 												// push the current page to
 												// history
@@ -126,23 +177,36 @@ public class ChitankaKindlet extends AbstractKindlet {
 												// navigate to the selected page
 												displayPage(link);
 											} else {
-												List links = entry.getLinks();
-												SyndLink txtLink = (SyndLink) links
-														.get(2);
-												downloadBook(txtLink.getHref());
+												// getDownloadLink
+												link = opdsItem
+														.getDownloadLinks();
+												if (link != null) {
+													downloadBook(link);
+												}
 											}
 										}
 									});
-								}
-
-								// set the input focus on the first item
-								if (panel.getComponentCount() > 0) {
-									panel.getComponent(0).requestFocus();
+								} else {
+									item.setFocusable(false);
 								}
 							}
+
+							c.fill = GridBagConstraints.BOTH;
+							c.weighty = 1.0; // request any extra vertical space
+							root.add(panel, c);
+							c.fill = GridBagConstraints.HORIZONTAL;
+							c.weighty = 0.0;
+
+							panel.getComponent(0).requestFocus();
+
+							KLabel pageIndex = new KLabel(("Страница 1 от "
+									.concat(Integer.toString(getTotalPages()))));
+							pageIndex.setBorder(new KLineBorder(1));
+							root.add(pageIndex, c);
 						} catch (Throwable t) {
 							StringWriter sw = new StringWriter();
 							t.printStackTrace(new PrintWriter(sw));
+							root.removeAll();
 							root.add(new KTextArea(sw.toString()));
 						}
 
@@ -172,6 +236,62 @@ public class ChitankaKindlet extends AbstractKindlet {
 
 		progress.setIndeterminate(false);
 		progress.setString("Книгата е свалена");
+	}
+
+	private void nextPage() throws Exception {
+		KProgress progress = ctx.getProgressIndicator();
+		progress.setIndeterminate(true);
+
+		int count = currentPage.getItemsCount();
+		if (count - pageIndex > PAGE_SIZE) {
+			pageIndex += 20;
+			updatePage();
+		}
+
+		progress.setIndeterminate(false);
+	}
+
+	private void previousPage() throws Exception {
+		if (pageIndex > 0) {
+			pageIndex -= 20;
+			updatePage();
+		}
+	}
+
+	private void updatePage() throws Exception {
+		OpdsItem[] opdsItems = currentPage.getItems(pageIndex, PAGE_SIZE);
+
+		Container root = ctx.getRootContainer();
+		KPanel panel = (KPanel) root.getComponent(2);
+		Component[] components = panel.getComponents();
+		for (int i = 0; i < components.length; i++) {
+			KWTSelectableLabel item = (KWTSelectableLabel) components[i];
+			if (i < opdsItems.length) {
+				final OpdsItem opdsItem = opdsItems[i];
+				item.setText(opdsItem.getTitle());
+				item.setFocusable(true);
+			} else {
+				item.setText("");
+				item.setFocusable(false);
+			}
+		}
+
+		components[0].requestFocus();
+
+		KLabel pageIndexLabel = (KLabel) root.getComponent(3);
+		pageIndexLabel.setText("Страница ".concat(Integer.toString(
+				getCurrentPageIndex()).concat(
+				" от ".concat(Integer.toString(getTotalPages())))));
+
+		root.repaint();
+	}
+	
+	private int getCurrentPageIndex() {
+		return pageIndex / PAGE_SIZE + 1;
+	}
+
+	private int getTotalPages() throws Exception {
+		return (currentPage.getItemsCount() - 1) / PAGE_SIZE + 1;
 	}
 
 	public static void main(String[] args) throws Exception {

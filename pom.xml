@@ -139,6 +139,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>kwt</groupId>
+			<artifactId>kwt</artifactId>
+			<version>0.1</version>
+		</dependency>
+		<dependency>
 			<groupId>rome</groupId>
 			<artifactId>rome</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
