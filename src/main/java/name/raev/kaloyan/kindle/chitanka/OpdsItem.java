@@ -18,6 +18,10 @@
  */
 package name.raev.kaloyan.kindle.chitanka;
 
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -43,5 +47,29 @@ public class OpdsItem {
 		List links = entry.getLinks();
 		SyndLink txtLink = (SyndLink) links.get(2);
 		return txtLink.getHref();
+	}
+
+	public Image getImage() {
+		List links = entry.getLinks();
+		if (links != null && links.size() > 5) {
+			try {
+				SyndLink imageLink = (SyndLink) links.get(5);
+				String href = imageLink.getHref();
+				href = replace(href, ".200.", ".65.");
+				URL url = new URL(href);
+				return Toolkit.getDefaultToolkit().createImage(url);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	private String replace(String str, String text, String replacement) {
+		int i = str.indexOf(text);
+		if (i != -1) {
+			return str.substring(0, i).concat(replacement).concat(str.substring(i + 5));
+		}
+		return str;
 	}
 }

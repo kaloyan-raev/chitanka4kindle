@@ -22,14 +22,18 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Stack;
 
 import org.kwt.ui.KWTSelectableLabel;
@@ -40,6 +44,7 @@ import com.amazon.kindle.kindlet.event.KindleKeyCodes;
 import com.amazon.kindle.kindlet.net.Connectivity;
 import com.amazon.kindle.kindlet.net.ConnectivityHandler;
 import com.amazon.kindle.kindlet.net.NetworkDisabledDetails;
+import com.amazon.kindle.kindlet.ui.KImage;
 import com.amazon.kindle.kindlet.ui.KLabel;
 import com.amazon.kindle.kindlet.ui.KLabelMultiline;
 import com.amazon.kindle.kindlet.ui.KPanel;
@@ -49,7 +54,7 @@ import com.amazon.kindle.kindlet.ui.border.KLineBorder;
 
 public class ChitankaKindlet extends AbstractKindlet {
 
-	private final static int PAGE_SIZE = 20;
+	private final static int PAGE_SIZE = 6;
 
 	private KindletContext ctx;
 
@@ -57,6 +62,8 @@ public class ChitankaKindlet extends AbstractKindlet {
 
 	private OpdsPage currentPage;
 	private int pageIndex;
+	
+	Image noCoverImage;
 
 	public void create(KindletContext context) {
 		this.ctx = context;
@@ -102,6 +109,12 @@ public class ChitankaKindlet extends AbstractKindlet {
 						return false;
 					}
 				});
+		
+		try {
+			noCoverImage = Toolkit.getDefaultToolkit().createImage(new URL("http://assets.chitanka.info/thumb/book-cover/00/0.65.png"));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void start() {
@@ -151,31 +164,41 @@ public class ChitankaKindlet extends AbstractKindlet {
 
 							final KPanel content = new KPanel(new GridBagLayout());
 
-							GridBagConstraints cc0 = new GridBagConstraints();
-							cc0.gridx = 0;
-							cc0.gridy = GridBagConstraints.RELATIVE;
-							cc0.weightx = 0.0;
-							cc0.weighty = 1.0;
-							cc0.anchor = GridBagConstraints.EAST;
-							GridBagConstraints cc1 = new GridBagConstraints();
-							cc1.gridx = 1;
-							cc1.gridy = GridBagConstraints.RELATIVE;
-							cc1.weightx = 1.0;
-							cc1.weighty = 1.0;
-							cc1.anchor = GridBagConstraints.WEST;
-							cc1.insets = new Insets(0, 10, 0, 0);
+							GridBagConstraints cIndex = new GridBagConstraints();
+							cIndex.gridx = 0;
+							cIndex.gridy = GridBagConstraints.RELATIVE;
+							cIndex.weightx = 0.0;
+							cIndex.weighty = 1.0;
+							cIndex.anchor = GridBagConstraints.EAST;
+							GridBagConstraints cImage = new GridBagConstraints();
+							cImage.gridx = 1;
+							cImage.gridy = GridBagConstraints.RELATIVE;
+							cImage.weightx = 0.0;
+							cImage.weighty = 1.0;
+							cImage.insets = new Insets(0, 20, 0, 20);
+							GridBagConstraints cTitle = new GridBagConstraints();
+							cTitle.gridx = 2;
+							cTitle.gridy = GridBagConstraints.RELATIVE;
+							cTitle.weightx = 1.0;
+							cTitle.weighty = 1.0;
+							cTitle.anchor = GridBagConstraints.WEST;
 
 							for (int i = 0; i < PAGE_SIZE; i++) {
 								KLabel indexLabel = new KLabel();
-								content.add(indexLabel, cc0);
+								content.add(indexLabel, cIndex);
+								
+								KImage image = new KImage(null, 65, 86);
+								content.add(image, cImage);
 								
 								KWTSelectableLabel titleLabel = new KWTSelectableLabel();
-								content.add(titleLabel, cc1);
+								content.add(titleLabel, cTitle);
 
 								if (i < opdsItems.length) {
-									indexLabel.setText(Integer.toString(pageIndex + i + 1).concat("."));
-									
 									OpdsItem opdsItem = opdsItems[i];
+									
+									indexLabel.setText(Integer.toString(pageIndex + i + 1).concat("."));
+									image.setImage(opdsItem.getImage(), false);
+									
 									titleLabel.setText(opdsItem.getTitle());
 									titleLabel.setFocusable(true);
 
@@ -214,7 +237,7 @@ public class ChitankaKindlet extends AbstractKindlet {
 							c.fill = GridBagConstraints.HORIZONTAL;
 							c.weighty = 0.0;
 
-							content.getComponent(1).requestFocus();
+							content.getComponent(2).requestFocus();
 
 							KLabel pageIndex = new KLabel(("Страница 1 от "
 									.concat(Integer.toString(getTotalPages()))));
@@ -261,7 +284,7 @@ public class ChitankaKindlet extends AbstractKindlet {
 
 		int count = currentPage.getItemsCount();
 		if (count - pageIndex > PAGE_SIZE) {
-			pageIndex += 20;
+			pageIndex += PAGE_SIZE;
 			updatePage();
 		}
 
@@ -270,7 +293,7 @@ public class ChitankaKindlet extends AbstractKindlet {
 
 	private void previousPage() throws Exception {
 		if (pageIndex > 0) {
-			pageIndex -= 20;
+			pageIndex -= PAGE_SIZE;
 			updatePage();
 		}
 	}
@@ -279,25 +302,29 @@ public class ChitankaKindlet extends AbstractKindlet {
 		OpdsItem[] opdsItems = currentPage.getItems(pageIndex, PAGE_SIZE);
 
 		Container root = ctx.getRootContainer();
-		KPanel panel = (KPanel) root.getComponent(2);
-		Component[] components = panel.getComponents();
-		for (int i = 0; i < components.length; i += 2) {
+		KPanel content = (KPanel) root.getComponent(2);
+		Component[] components = content.getComponents();
+		for (int i = 0; i < components.length; i += 3) {
 			KLabel indexLabel = (KLabel) components[i];
-			KWTSelectableLabel titleLabel = (KWTSelectableLabel) components[i + 1];
-			if (i / 2 < opdsItems.length) {
-				indexLabel.setText(Integer.toString(pageIndex + (i / 2) + 1).concat("."));
+			KImage image = (KImage) components[i + 1];
+			KWTSelectableLabel titleLabel = (KWTSelectableLabel) components[i + 2];
+			if (i / 3 < opdsItems.length) {
+				OpdsItem opdsItem = opdsItems[i / 3];
 				
-				final OpdsItem opdsItem = opdsItems[i / 2];
+				indexLabel.setText(Integer.toString(pageIndex + (i / 3) + 1).concat("."));
+				image.setImage(opdsItem.getImage(), false);
+				
 				titleLabel.setText(opdsItem.getTitle());
 				titleLabel.setFocusable(true);
 			} else {
 				indexLabel.setText("");
+				image.setImage(null, false);
 				titleLabel.setText("");
 				titleLabel.setFocusable(false);
 			}
 		}
 
-		components[1].requestFocus();
+		components[2].requestFocus();
 
 		KLabel pageIndexLabel = (KLabel) root.getComponent(3);
 		pageIndexLabel.setText("Страница ".concat(Integer.toString(
