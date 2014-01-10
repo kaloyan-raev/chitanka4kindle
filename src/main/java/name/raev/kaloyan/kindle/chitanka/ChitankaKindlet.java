@@ -22,7 +22,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
@@ -150,20 +149,38 @@ public class ChitankaKindlet extends AbstractKindlet {
 							OpdsItem[] opdsItems = currentPage.getItems(
 									pageIndex, PAGE_SIZE);
 
-							final KPanel panel = new KPanel(new GridLayout(
-									PAGE_SIZE, 1));
+							final KPanel content = new KPanel(new GridBagLayout());
+
+							GridBagConstraints cc0 = new GridBagConstraints();
+							cc0.gridx = 0;
+							cc0.gridy = GridBagConstraints.RELATIVE;
+							cc0.weightx = 0.0;
+							cc0.weighty = 1.0;
+							cc0.anchor = GridBagConstraints.EAST;
+							GridBagConstraints cc1 = new GridBagConstraints();
+							cc1.gridx = 1;
+							cc1.gridy = GridBagConstraints.RELATIVE;
+							cc1.weightx = 1.0;
+							cc1.weighty = 1.0;
+							cc1.anchor = GridBagConstraints.WEST;
+							cc1.insets = new Insets(0, 10, 0, 0);
 
 							for (int i = 0; i < PAGE_SIZE; i++) {
-								KWTSelectableLabel item = new KWTSelectableLabel();
-								panel.add(item);
+								KLabel indexLabel = new KLabel();
+								content.add(indexLabel, cc0);
+								
+								KWTSelectableLabel titleLabel = new KWTSelectableLabel();
+								content.add(titleLabel, cc1);
 
 								if (i < opdsItems.length) {
+									indexLabel.setText(Integer.toString(pageIndex + i + 1).concat("."));
+									
 									OpdsItem opdsItem = opdsItems[i];
-									item.setText(opdsItem.getTitle());
-									item.setFocusable(true);
+									titleLabel.setText(opdsItem.getTitle());
+									titleLabel.setFocusable(true);
 
 									final int index = i;
-									item.addActionListener(new ActionListener() {
+									titleLabel.addActionListener(new ActionListener() {
 										public void actionPerformed(
 												ActionEvent e) {
 											OpdsItem opdsItem = currentPage
@@ -187,17 +204,17 @@ public class ChitankaKindlet extends AbstractKindlet {
 										}
 									});
 								} else {
-									item.setFocusable(false);
+									titleLabel.setFocusable(false);
 								}
 							}
 
 							c.fill = GridBagConstraints.BOTH;
 							c.weighty = 1.0; // request any extra vertical space
-							root.add(panel, c);
+							root.add(content, c);
 							c.fill = GridBagConstraints.HORIZONTAL;
 							c.weighty = 0.0;
 
-							panel.getComponent(0).requestFocus();
+							content.getComponent(1).requestFocus();
 
 							KLabel pageIndex = new KLabel(("Страница 1 от "
 									.concat(Integer.toString(getTotalPages()))));
@@ -264,19 +281,23 @@ public class ChitankaKindlet extends AbstractKindlet {
 		Container root = ctx.getRootContainer();
 		KPanel panel = (KPanel) root.getComponent(2);
 		Component[] components = panel.getComponents();
-		for (int i = 0; i < components.length; i++) {
-			KWTSelectableLabel item = (KWTSelectableLabel) components[i];
-			if (i < opdsItems.length) {
-				final OpdsItem opdsItem = opdsItems[i];
-				item.setText(opdsItem.getTitle());
-				item.setFocusable(true);
+		for (int i = 0; i < components.length; i += 2) {
+			KLabel indexLabel = (KLabel) components[i];
+			KWTSelectableLabel titleLabel = (KWTSelectableLabel) components[i + 1];
+			if (i / 2 < opdsItems.length) {
+				indexLabel.setText(Integer.toString(pageIndex + (i / 2) + 1).concat("."));
+				
+				final OpdsItem opdsItem = opdsItems[i / 2];
+				titleLabel.setText(opdsItem.getTitle());
+				titleLabel.setFocusable(true);
 			} else {
-				item.setText("");
-				item.setFocusable(false);
+				indexLabel.setText("");
+				titleLabel.setText("");
+				titleLabel.setFocusable(false);
 			}
 		}
 
-		components[0].requestFocus();
+		components[1].requestFocus();
 
 		KLabel pageIndexLabel = (KLabel) root.getComponent(3);
 		pageIndexLabel.setText("Страница ".concat(Integer.toString(
