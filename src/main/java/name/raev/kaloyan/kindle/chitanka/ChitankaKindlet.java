@@ -14,7 +14,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ * along with chitanka4kindle.  If not, see <http://www.gnu.org/licenses/>.
  */
 package name.raev.kaloyan.kindle.chitanka;
 
@@ -36,7 +36,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Stack;
 
-import org.kwt.ui.KWTSelectableLabel;
+import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
 import com.amazon.kindle.kindlet.AbstractKindlet;
 import com.amazon.kindle.kindlet.KindletContext;
@@ -62,7 +62,7 @@ public class ChitankaKindlet extends AbstractKindlet {
 
 	private OpdsPage currentPage;
 	private int pageIndex;
-	
+
 	Image noCoverImage;
 
 	public void create(KindletContext context) {
@@ -109,9 +109,13 @@ public class ChitankaKindlet extends AbstractKindlet {
 						return false;
 					}
 				});
-		
+
 		try {
-			noCoverImage = Toolkit.getDefaultToolkit().createImage(new URL("http://assets.chitanka.info/thumb/book-cover/00/0.65.png"));
+			noCoverImage = Toolkit
+					.getDefaultToolkit()
+					.createImage(
+							new URL(
+									"http://assets.chitanka.info/thumb/book-cover/00/0.65.png"));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -162,7 +166,8 @@ public class ChitankaKindlet extends AbstractKindlet {
 							OpdsItem[] opdsItems = currentPage.getItems(
 									pageIndex, PAGE_SIZE);
 
-							final KPanel content = new KPanel(new GridBagLayout());
+							final KPanel content = new KPanel(
+									new GridBagLayout());
 
 							GridBagConstraints cIndex = new GridBagConstraints();
 							cIndex.gridx = 0;
@@ -186,46 +191,52 @@ public class ChitankaKindlet extends AbstractKindlet {
 							for (int i = 0; i < PAGE_SIZE; i++) {
 								KLabel indexLabel = new KLabel();
 								content.add(indexLabel, cIndex);
-								
+
 								KImage image = new KImage(null, 65, 86);
 								content.add(image, cImage);
-								
-								KWTSelectableLabel titleLabel = new KWTSelectableLabel();
+
+								KActionLabel titleLabel = new KActionLabel();
 								content.add(titleLabel, cTitle);
 
 								if (i < opdsItems.length) {
 									OpdsItem opdsItem = opdsItems[i];
-									
-									indexLabel.setText(Integer.toString(pageIndex + i + 1).concat("."));
+
+									indexLabel.setText(Integer.toString(
+											pageIndex + i + 1).concat("."));
 									image.setImage(opdsItem.getImage(), false);
-									
+
 									titleLabel.setText(opdsItem.getTitle());
 									titleLabel.setFocusable(true);
 
 									final int index = i;
-									titleLabel.addActionListener(new ActionListener() {
-										public void actionPerformed(
-												ActionEvent e) {
-											OpdsItem opdsItem = currentPage
-													.getItem(pageIndex + index);
-											String link = opdsItem
-													.getNavigationLink();
-											if (link != null) {
-												// push the current page to
-												// history
-												pageHistory.push(opdsUrl);
-												// navigate to the selected page
-												displayPage(link);
-											} else {
-												// getDownloadLink
-												link = opdsItem
-														.getDownloadLinks();
-												if (link != null) {
-													downloadBook(link);
+									titleLabel
+											.addActionListener(new ActionListener() {
+												public void actionPerformed(
+														ActionEvent e) {
+													OpdsItem opdsItem = currentPage
+															.getItem(pageIndex
+																	+ index);
+													String link = opdsItem
+															.getNavigationLink();
+													if (link != null) {
+														// push the current page
+														// to
+														// history
+														pageHistory
+																.push(opdsUrl);
+														// navigate to the
+														// selected page
+														displayPage(link);
+													} else {
+														// getDownloadLink
+														link = opdsItem
+																.getDownloadLinks();
+														if (link != null) {
+															downloadBook(link);
+														}
+													}
 												}
-											}
-										}
-									});
+											});
 								} else {
 									titleLabel.setFocusable(false);
 								}
@@ -307,13 +318,14 @@ public class ChitankaKindlet extends AbstractKindlet {
 		for (int i = 0; i < components.length; i += 3) {
 			KLabel indexLabel = (KLabel) components[i];
 			KImage image = (KImage) components[i + 1];
-			KWTSelectableLabel titleLabel = (KWTSelectableLabel) components[i + 2];
+			KActionLabel titleLabel = (KActionLabel) components[i + 2];
 			if (i / 3 < opdsItems.length) {
 				OpdsItem opdsItem = opdsItems[i / 3];
-				
-				indexLabel.setText(Integer.toString(pageIndex + (i / 3) + 1).concat("."));
+
+				indexLabel.setText(Integer.toString(pageIndex + (i / 3) + 1)
+						.concat("."));
 				image.setImage(opdsItem.getImage(), false);
-				
+
 				titleLabel.setText(opdsItem.getTitle());
 				titleLabel.setFocusable(true);
 			} else {
@@ -333,7 +345,7 @@ public class ChitankaKindlet extends AbstractKindlet {
 
 		root.repaint();
 	}
-	
+
 	private int getCurrentPageIndex() {
 		return pageIndex / PAGE_SIZE + 1;
 	}

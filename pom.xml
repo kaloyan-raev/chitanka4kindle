@@ -14,7 +14,7 @@
 	GNU General Public License for more details.
 	
 	You should have received a copy of the GNU General Public License
-	along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+	along with chitanka4kindle.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -137,11 +137,6 @@
 			<artifactId>kindlet</artifactId>
 			<version>1.2</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>kwt</groupId>
-			<artifactId>kwt</artifactId>
-			<version>0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>rome</groupId>
