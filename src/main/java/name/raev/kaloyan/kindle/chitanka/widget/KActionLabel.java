@@ -19,7 +19,6 @@
 package name.raev.kaloyan.kindle.chitanka.widget;
 
 import java.awt.AWTEvent;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -122,8 +121,6 @@ public class KActionLabel extends KLabel {
 		spoofSize = true;
 		super.paint(g);
 		spoofSize = false;
-
-		g.setColor(Color.BLACK);
 
 		int y = super.getSize().height - (UNDERLINE_GAP + UNDERLINE_THICKNESS);
 
