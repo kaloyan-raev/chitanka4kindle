@@ -20,12 +20,11 @@ package name.raev.kaloyan.kindle.chitanka;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -62,13 +61,31 @@ public class Utils {
 	}
 
 	public static void downloadZippedBook(String href)
-			throws FileNotFoundException, IOException {
+			throws IOException {
 		URL url = new URL(href);
-		URLConnection connection = url.openConnection();
-		ZipInputStream in = new ZipInputStream(connection.getInputStream());
+		ZipInputStream in = new ZipInputStream(url.openStream());
 		ZipEntry entry = in.getNextEntry();
+		
+		downloadBook(in, entry.getName());
+	}
+
+	public static void downloadMobiFromEpubUrl(String href) throws IOException {
+		URL urlEpub = new URL(href);
+		
+		String path = urlEpub.getFile();
+		path = path.substring(0, path.length() - 4).concat("mobi");
+		
+		URL urlMobi = new URL("http", "bb.bulexpo-bg.com", path);
+		InputStream in = urlMobi.openStream();
+		
+		String fileName = path.substring(path.lastIndexOf('/') + 1);
+
+		downloadBook(in, fileName);
+	}
+	
+	public static void downloadBook(InputStream in, String fileName) throws IOException {
 		OutputStream out = new BufferedOutputStream(new FileOutputStream(
-				new File("/mnt/us/documents/", entry.getName())));
+				new File("/mnt/us/documents/", fileName)));
 		try {
 			byte[] b = new byte[4096];
 			int bytesRead;
@@ -76,7 +93,6 @@ public class Utils {
 				out.write(b, 0, bytesRead);
 			}
 		} finally {
-			in.closeEntry();
 			in.close();
 			out.flush();
 			out.close();
