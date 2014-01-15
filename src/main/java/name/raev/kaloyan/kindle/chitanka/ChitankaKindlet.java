@@ -37,6 +37,7 @@ import java.net.URL;
 import java.util.Stack;
 
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
+import name.raev.kaloyan.kindle.chitanka.widget.KPager;
 
 import com.amazon.kindle.kindlet.AbstractKindlet;
 import com.amazon.kindle.kindlet.KindletContext;
@@ -50,7 +51,6 @@ import com.amazon.kindle.kindlet.ui.KLabelMultiline;
 import com.amazon.kindle.kindlet.ui.KPanel;
 import com.amazon.kindle.kindlet.ui.KProgress;
 import com.amazon.kindle.kindlet.ui.KTextArea;
-import com.amazon.kindle.kindlet.ui.border.KLineBorder;
 
 public class ChitankaKindlet extends AbstractKindlet {
 
@@ -250,10 +250,9 @@ public class ChitankaKindlet extends AbstractKindlet {
 
 							content.getComponent(2).requestFocus();
 
-							KLabel pageIndex = new KLabel(("Страница 1 от "
-									.concat(Integer.toString(getTotalPages()))));
-							pageIndex.setBorder(new KLineBorder(1));
-							root.add(pageIndex, c);
+							KPager pager = new KPager(getTotalPages());
+							c.insets = new Insets(0, 0, 0, 0);
+							root.add(pager, c);
 						} catch (Throwable t) {
 							StringWriter sw = new StringWriter();
 							t.printStackTrace(new PrintWriter(sw));
@@ -312,7 +311,7 @@ public class ChitankaKindlet extends AbstractKindlet {
 	private void updatePage() throws Exception {
 		OpdsItem[] opdsItems = currentPage.getItems(pageIndex, PAGE_SIZE);
 
-		Container root = ctx.getRootContainer();
+		Container  root = ctx.getRootContainer();
 		KPanel content = (KPanel) root.getComponent(2);
 		Component[] components = content.getComponents();
 		for (int i = 0; i < components.length; i += 3) {
@@ -338,10 +337,8 @@ public class ChitankaKindlet extends AbstractKindlet {
 
 		components[2].requestFocus();
 
-		KLabel pageIndexLabel = (KLabel) root.getComponent(3);
-		pageIndexLabel.setText("Страница ".concat(Integer.toString(
-				getCurrentPageIndex()).concat(
-				" от ".concat(Integer.toString(getTotalPages())))));
+		KPager pager = (KPager) root.getComponent(3);
+		pager.setPage(getCurrentPageIndex());
 
 		root.repaint();
 	}
