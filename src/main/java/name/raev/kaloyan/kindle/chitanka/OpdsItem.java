@@ -43,10 +43,10 @@ public class OpdsItem {
 		return entry.getLink();
 	}
 
-	public String getDownloadLinks() {
+	public String getDownloadLink() {
 		List links = entry.getLinks();
-		SyndLink txtLink = (SyndLink) links.get(0);
-		return txtLink.getHref();
+		SyndLink epubLink = (SyndLink) links.get(0);
+		return epubLink.getHref();
 	}
 
 	public Image getImage() {

@@ -127,11 +127,6 @@ public class OpdsPage {
 		return input.build(new XmlReader(feedUrl));
 	}
 
-	public static void main(String[] args) throws Exception {
-		OpdsPage opds = new OpdsPage("http://chitanka.info/books/alpha/-.opds");
-		System.out.println(opds.getItemsCount());
-	}
-
 	public OpdsItem[] getItems(int index, int length) throws Exception {
 		if (entries.size() < index + length) {
 			parseNextPage();

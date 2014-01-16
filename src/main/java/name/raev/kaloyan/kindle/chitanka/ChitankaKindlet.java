@@ -230,7 +230,7 @@ public class ChitankaKindlet extends AbstractKindlet {
 													} else {
 														// getDownloadLink
 														link = opdsItem
-																.getDownloadLinks();
+																.getDownloadLink();
 														if (link != null) {
 															downloadBook(link);
 														}
