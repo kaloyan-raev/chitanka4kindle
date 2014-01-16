@@ -271,7 +271,7 @@ public class ChitankaKindlet extends AbstractKindlet {
 		progress.setIndeterminate(true);
 
 		try {
-			Utils.downloadZippedBook(href);
+			Utils.downloadMobiFromEpubUrl(href);
 			Utils.rescanDocuments();
 		} catch (Throwable t) {
 			Container root = ctx.getRootContainer();

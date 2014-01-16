@@ -45,7 +45,7 @@ public class OpdsItem {
 
 	public String getDownloadLinks() {
 		List links = entry.getLinks();
-		SyndLink txtLink = (SyndLink) links.get(2);
+		SyndLink txtLink = (SyndLink) links.get(0);
 		return txtLink.getHref();
 	}
 
