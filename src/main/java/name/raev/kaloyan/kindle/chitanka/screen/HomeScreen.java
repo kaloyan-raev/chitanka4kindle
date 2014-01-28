@@ -19,6 +19,7 @@
 package name.raev.kaloyan.kindle.chitanka.screen;
 
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -31,8 +32,13 @@ import name.raev.kaloyan.kindle.chitanka.Utils;
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
 import com.amazon.kindle.kindlet.ui.KImage;
+import com.amazon.kindle.kindlet.ui.KindletUIResources;
 
 public class HomeScreen extends AbstractScreen {
+
+	private static final Font FONT = KindletUIResources.getInstance().getFont(
+			KindletUIResources.KFontFamilyName.SANS_SERIF, 24,
+			KindletUIResources.KFontStyle.BOLD, true);
 
 	HomeScreen(String opdsUrl) {
 		super(opdsUrl);
@@ -78,6 +84,7 @@ public class HomeScreen extends AbstractScreen {
 			final OpdsItem item = items[i];
 
 			KActionLabel label = new KActionLabel(item.getTitle());
+			label.setFont(FONT);
 
 			c.gridx = i % 2;
 			container.add(label, c);
