@@ -45,12 +45,12 @@ public class OpdsPage {
 		this.url = url;
 	}
 
-	public String getTitle() throws Exception {
+	public String getTitle() {
 		parseFirstPage();
 		return firstPage.getTitle();
 	}
 
-	public int getItemsCount() throws Exception {
+	public int getItemsCount() {
 		if (itemsCount == Integer.MIN_VALUE) {
 			parsePagesCount();
 	
@@ -66,7 +66,7 @@ public class OpdsPage {
 		return itemsCount;
 	}
 
-	private void parsePagesCount() throws Exception {
+	private void parsePagesCount() {
 		parseFirstPage();
 
 		String title = firstPage.getTitle();
@@ -84,23 +84,35 @@ public class OpdsPage {
 		}
 	}
 
-	private void parseFirstPage() throws Exception {
+	private void parseFirstPage() {
 		if (firstPage == null) {
-			URL feedUrl = new URL(url);
-			SyndFeedInput input = new SyndFeedInput();
-			firstPage = input.build(new XmlReader(feedUrl));
+			firstPage = parse(url);
 			entries.addAll(firstPage.getEntries());
 			currentPage = firstPage;
 		}
 	}
 
-	private void parseNextPage() throws Exception {
+	private void parseNextPage() {
 		SyndLink nextLink = getNextLink(currentPage);
 		if (nextLink != null) {
-			URL feedUrl = new URL("http://chitanka.info".concat(nextLink.getHref()));
-			SyndFeedInput input = new SyndFeedInput();
-			currentPage = input.build(new XmlReader(feedUrl));
+			currentPage = parse("http://chitanka.info".concat(nextLink.getHref()));
 			entries.addAll(currentPage.getEntries());
+		}
+	}
+	
+	private SyndFeed parsePage(int pageNumber) {
+		String pageUrl = url.concat("/").concat(Integer.toString(pageNumber));
+		return parse(pageUrl);
+	}
+
+	private SyndFeed parse(String address) {
+		try {
+			URL feedUrl = new URL(address);
+			SyndFeedInput input = new SyndFeedInput();
+			return input.build(new XmlReader(feedUrl));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -120,14 +132,7 @@ public class OpdsPage {
 		return null;
 	}
 
-	private SyndFeed parsePage(int pageNumber) throws Exception {
-		String pageUrl = url.concat("/").concat(Integer.toString(pageNumber));
-		URL feedUrl = new URL(pageUrl);
-		SyndFeedInput input = new SyndFeedInput();
-		return input.build(new XmlReader(feedUrl));
-	}
-
-	public OpdsItem[] getItems(int index, int length) throws Exception {
+	public OpdsItem[] getItems(int index, int length) {
 		if (entries.size() < index + length) {
 			parseNextPage();
 		}
@@ -146,6 +151,14 @@ public class OpdsPage {
 			return new OpdsItem((SyndEntry) entries.get(index));
 		}
 		return null;
+	}
+
+	public OpdsItem[] getItems() {
+		return getItems(0, getItemsCount());
+	}
+
+	public String getUrl() {
+		return url;
 	}
 
 }

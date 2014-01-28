@@ -18,6 +18,8 @@
  */
 package name.raev.kaloyan.kindle.chitanka;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -97,6 +99,11 @@ public class Utils {
 			out.flush();
 			out.close();
 		}
+	}
+
+	public static Image loadBuiltinImage(String fileName) {
+		URL url = Utils.class.getClassLoader().getResource(fileName);
+		return Toolkit.getDefaultToolkit().getImage(url);
 	}
 
 }

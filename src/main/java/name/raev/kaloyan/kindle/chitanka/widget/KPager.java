@@ -49,7 +49,8 @@ public class KPager extends KLabel {
 	/**
 	 * Constructs a new pager with the given number of pages.
 	 * 
-	 * @param totalPages the total number of pages
+	 * @param totalPages
+	 *            the total number of pages
 	 */
 	public KPager(int totalPages) {
 		this.totalPages = totalPages;
@@ -64,7 +65,8 @@ public class KPager extends KLabel {
 	/**
 	 * Sets the current page.
 	 * 
-	 * @param index the index of the current page
+	 * @param index
+	 *            the index of the current page
 	 */
 	public void setPage(int index) {
 		currentPage = index;
@@ -72,8 +74,12 @@ public class KPager extends KLabel {
 	}
 
 	private void updateText() {
-		setText("Страница ".concat(Integer.toString(currentPage))
-				.concat(" от ").concat(Integer.toString(totalPages)));
+		if (totalPages > 1) {
+			setText("Страница ".concat(Integer.toString(currentPage))
+					.concat(" от ").concat(Integer.toString(totalPages)));
+		} else {
+			setText("");
+		}
 	}
 
 	/**
