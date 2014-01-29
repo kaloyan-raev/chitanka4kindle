@@ -18,16 +18,31 @@
  */
 package name.raev.kaloyan.kindle.chitanka.screen;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class ScreenManager {
 
 	private static AbstractScreen currentScreen;
 
 	public static AbstractScreen createScreen(String opdsUrl) {
-		if (opdsUrl.endsWith("catalog.opds")) {
-			return new HomeScreen(opdsUrl);
-		} else {
-			return new BookListScreen(opdsUrl);
+		try {
+			URL url = new URL(opdsUrl);
+			String path = url.getPath();
+
+			if ("/catalog.opds".equals(path)) {
+				return new HomeScreen(opdsUrl);
+			} else if ("/authors.opds".equals(path)
+					|| "/translators.opds".equals(path)
+					|| "/books.opds".equals(path) || "/texts.opds".equals(path)) {
+				return new ShortListScreen(opdsUrl);
+			}
+		} catch (MalformedURLException e) {
+			// return the default screen
 		}
+
+		// default screen
+		return new BookListScreen(opdsUrl);
 	}
 
 	public static void setCurrentScreen(AbstractScreen screen) {

@@ -21,26 +21,29 @@ package name.raev.kaloyan.kindle.chitanka.screen;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import name.raev.kaloyan.kindle.chitanka.ConnectivityManager;
 import name.raev.kaloyan.kindle.chitanka.OpdsItem;
-import name.raev.kaloyan.kindle.chitanka.Utils;
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
-import com.amazon.kindle.kindlet.ui.KImage;
+import com.amazon.kindle.kindlet.ui.KLabel;
+import com.amazon.kindle.kindlet.ui.KPanel;
 import com.amazon.kindle.kindlet.ui.KindletUIResources;
 
-public class HomeScreen extends AbstractScreen {
+public class ShortListScreen extends AbstractScreen {
+	
+	private static final Font FONT_TITLE = KindletUIResources.getInstance().getFont(
+			KindletUIResources.KFontFamilyName.SANS_SERIF, 36,
+			KindletUIResources.KFontStyle.BOLD_ITALIC, true);
 
-	private static final Font FONT = KindletUIResources.getInstance().getFont(
+	private static final Font FONT_ITEM = KindletUIResources.getInstance().getFont(
 			KindletUIResources.KFontFamilyName.SANS_SERIF, 24,
 			KindletUIResources.KFontStyle.BOLD, true);
 
-	HomeScreen(String opdsUrl) {
+	ShortListScreen(String opdsUrl) {
 		super(opdsUrl);
 	}
 
@@ -49,41 +52,25 @@ public class HomeScreen extends AbstractScreen {
 	}
 
 	protected void createContent(Container container) {
-		addLogo(container);
-		addLinks(container);
-	}
-
-	protected void updateContent(Container container) {
-		// nothing to update
-	}
-
-	private void addLogo(Container container) {
 		GridBagConstraints c = new GridBagConstraints();
+		c.weightx = 1.0;
 		c.gridx = 0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridy = GridBagConstraints.RELATIVE;
-		c.weightx = 1.0;
-		c.weighty = 1.0;
+		c.insets = new Insets(8, 32, 8, 16);
+		c.anchor = GridBagConstraints.WEST;
 
-		Image img = Utils.loadBuiltinImage("logo.jpg");
-		KImage image = new KImage(img, 688 / 2, 720 / 2);
-		container.add(image, c);
-	}
+		// add title
+		KLabel title = new KLabel(getPageTitle());
+		title.setFont(FONT_TITLE);
+		container.add(title, c);
 
-	private void addLinks(Container container) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridy = GridBagConstraints.RELATIVE;
-		c.weightx = 1.0;
-		c.weighty = 1.0;
-
+		// add item links
 		OpdsItem[] items = opdsPage.getItems();
 		for (int i = 0; i < items.length; i++) {
 			final OpdsItem item = items[i];
 
 			KActionLabel label = new KActionLabel(item.getTitle());
-			label.setFont(FONT);
-
-			c.gridx = i % 2;
+			label.setFont(FONT_ITEM);
 			container.add(label, c);
 
 			label.addActionListener(new ActionListener() {
@@ -93,6 +80,24 @@ public class HomeScreen extends AbstractScreen {
 				}
 			});
 		}
+		
+		// add empty filler
+		c.fill = GridBagConstraints.BOTH;
+		c.weighty = 1.0; // request any extra vertical space
+		container.add(new KPanel(), c);
+	}
+
+	protected void updateContent(Container container) {
+		// nothing to update
+	}
+	
+	private String getPageTitle() {
+		String title = opdsPage.getTitle();
+		int index = title.indexOf(" — ");
+		if (index != -1) {
+			title = title.substring(0, index);
+		}
+		return title;
 	}
 
 }
