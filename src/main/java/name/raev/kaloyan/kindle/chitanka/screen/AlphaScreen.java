@@ -20,63 +20,51 @@ package name.raev.kaloyan.kindle.chitanka.screen;
 
 import java.awt.Container;
 import java.awt.GridBagConstraints;
-import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import name.raev.kaloyan.kindle.chitanka.ConnectivityManager;
 import name.raev.kaloyan.kindle.chitanka.OpdsItem;
-import name.raev.kaloyan.kindle.chitanka.Utils;
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
-import com.amazon.kindle.kindlet.ui.KImage;
+import com.amazon.kindle.kindlet.ui.KLabel;
+import com.amazon.kindle.kindlet.ui.KPanel;
 
-public class HomeScreen extends AbstractScreen {
-
-	HomeScreen(String opdsUrl) {
+public class AlphaScreen extends AbstractScreen {
+	
+	AlphaScreen(String opdsUrl) {
 		super(opdsUrl);
 	}
 
 	protected int getPageSize() {
-		return 8;
+		return 30;
 	}
 
 	protected void createContent(Container container) {
-		addLogo(container);
-		addLinks(container);
-	}
-
-	protected void updateContent(Container container) {
-		// nothing to update
-	}
-
-	private void addLogo(Container container) {
 		GridBagConstraints c = new GridBagConstraints();
+		c.weightx = 1.0;
 		c.gridx = 0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridy = GridBagConstraints.RELATIVE;
-		c.weightx = 1.0;
-		c.weighty = 1.0;
+		c.insets = new Insets(8, 32, 8, 16);
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = 3;
 
-		Image img = Utils.loadBuiltinImage("logo.jpg");
-		KImage image = new KImage(img, 688 / 2, 720 / 2);
-		container.add(image, c);
-	}
+		// add title
+		KLabel title = new KLabel(getPageTitle());
+		title.setFont(FONT_PAGE_TITLE);
+		container.add(title, c);
 
-	private void addLinks(Container container) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridy = GridBagConstraints.RELATIVE;
-		c.weightx = 1.0;
-		c.weighty = 1.0;
-
+		c.gridwidth = 1;
+		// add item links
 		OpdsItem[] items = opdsPage.getItems();
 		for (int i = 0; i < items.length; i++) {
 			final OpdsItem item = items[i];
 
 			KActionLabel label = new KActionLabel(item.getTitle());
 			label.setFont(FONT_LINK);
-
-			c.gridx = i % 2;
+			
+			c.gridx = i % 3;
 			container.add(label, c);
 
 			label.addActionListener(new ActionListener() {
@@ -86,6 +74,16 @@ public class HomeScreen extends AbstractScreen {
 				}
 			});
 		}
+		
+		// add empty filler
+		c.fill = GridBagConstraints.BOTH;
+		c.weighty = 1.0; // request any extra vertical space
+		container.add(new KPanel(), c);
+
+	}
+
+	protected void updateContent(Container container) {
+		// nothing to update
 	}
 
 }

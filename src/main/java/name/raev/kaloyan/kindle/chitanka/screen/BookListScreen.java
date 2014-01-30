@@ -41,6 +41,10 @@ public class BookListScreen extends AbstractScreen {
 		super(opdsUrl);
 	}
 
+	protected int getPageSize() {
+		return 6;
+	}
+
 	protected void createContent(Container container) {
 		container.setLayout(new GridBagLayout());
 
@@ -56,7 +60,6 @@ public class BookListScreen extends AbstractScreen {
 				new KLabel("Общо ".concat(Integer.toString(
 						opdsPage.getItemsCount()).concat(" заглавия"))), c);
 
-		pageIndex = 0;
 		OpdsItem[] opdsItems = opdsPage.getItems(pageIndex, getPageSize());
 
 		final KPanel content = new KPanel(new GridBagLayout());
@@ -128,10 +131,6 @@ public class BookListScreen extends AbstractScreen {
 		c.weighty = 0.0;
 
 		content.getComponent(2).requestFocus();
-	}
-
-	protected int getPageSize() {
-		return 6;
 	}
 
 	protected void updateContent(Container container) {

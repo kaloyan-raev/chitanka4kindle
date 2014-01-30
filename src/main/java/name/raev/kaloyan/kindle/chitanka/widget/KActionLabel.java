@@ -29,7 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
-import com.amazon.kindle.kindlet.ui.KLabel;
+import com.amazon.kindle.kindlet.ui.KLabelMultiline;
 
 /**
  * A KLabel that can be focusable and receive ActionEvents.
@@ -42,7 +42,7 @@ import com.amazon.kindle.kindlet.ui.KLabel;
  * 
  * @author Kaloyan Raev
  */
-public class KActionLabel extends KLabel {
+public class KActionLabel extends KLabelMultiline {
 
 	private static final long serialVersionUID = 4428367054990871058L;
 

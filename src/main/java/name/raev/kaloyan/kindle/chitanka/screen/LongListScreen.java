@@ -18,74 +18,85 @@
  */
 package name.raev.kaloyan.kindle.chitanka.screen;
 
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
-import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import name.raev.kaloyan.kindle.chitanka.ConnectivityManager;
 import name.raev.kaloyan.kindle.chitanka.OpdsItem;
-import name.raev.kaloyan.kindle.chitanka.Utils;
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
-import com.amazon.kindle.kindlet.ui.KImage;
+import com.amazon.kindle.kindlet.ui.KLabel;
+import com.amazon.kindle.kindlet.ui.KPanel;
 
-public class HomeScreen extends AbstractScreen {
+public class LongListScreen extends AbstractScreen {
 
-	HomeScreen(String opdsUrl) {
+	LongListScreen(String opdsUrl) {
 		super(opdsUrl);
 	}
 
 	protected int getPageSize() {
-		return 8;
+		return 13;
 	}
 
 	protected void createContent(Container container) {
-		addLogo(container);
-		addLinks(container);
-	}
-
-	protected void updateContent(Container container) {
-		// nothing to update
-	}
-
-	private void addLogo(Container container) {
 		GridBagConstraints c = new GridBagConstraints();
+		c.weightx = 1.0;
 		c.gridx = 0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridy = GridBagConstraints.RELATIVE;
-		c.weightx = 1.0;
-		c.weighty = 1.0;
+		c.insets = new Insets(8, 32, 8, 16);
+		c.anchor = GridBagConstraints.WEST;
 
-		Image img = Utils.loadBuiltinImage("logo.jpg");
-		KImage image = new KImage(img, 688 / 2, 720 / 2);
-		container.add(image, c);
-	}
+		// add title
+		KLabel title = new KLabel(getPageTitle());
+		title.setFont(FONT_PAGE_TITLE);
+		container.add(title, c);
 
-	private void addLinks(Container container) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridy = GridBagConstraints.RELATIVE;
-		c.weightx = 1.0;
-		c.weighty = 1.0;
-
-		OpdsItem[] items = opdsPage.getItems();
+		// add item links
+		OpdsItem[] items = opdsPage.getItems(pageIndex, getPageSize());
 		for (int i = 0; i < items.length; i++) {
-			final OpdsItem item = items[i];
+			OpdsItem item = items[i];
 
 			KActionLabel label = new KActionLabel(item.getTitle());
 			label.setFont(FONT_LINK);
-
-			c.gridx = i % 2;
 			container.add(label, c);
 
+			final int index = i;
 			label.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					OpdsItem opdsItem = opdsPage.getItem(pageIndex + index);
 					ConnectivityManager.getInstance().navigateTo(
-							item.getNavigationLink());
+							opdsItem.getNavigationLink());
 				}
 			});
 		}
+		
+		// add empty filler
+		c.fill = GridBagConstraints.BOTH;
+		c.weighty = 1.0; // request any extra vertical space
+		container.add(new KPanel(), c);
+	}
+
+	protected void updateContent(Container container) {
+		OpdsItem[] opdsItems = opdsPage.getItems(pageIndex, getPageSize());
+
+		Component[] components = container.getComponents();
+		for (int i = 1; i < components.length - 1; i++) {
+			KActionLabel titleLabel = (KActionLabel) components[i];
+			if (i - 1 < opdsItems.length) {
+				OpdsItem opdsItem = opdsItems[i - 1];
+				titleLabel.setText(opdsItem.getTitle());
+				titleLabel.setFocusable(true);
+			} else {
+				titleLabel.setText("");
+				titleLabel.setFocusable(false);
+			}
+		}
+
+		components[1].requestFocus();
 	}
 
 }

@@ -19,7 +19,6 @@
 package name.raev.kaloyan.kindle.chitanka.screen;
 
 import java.awt.Container;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -31,18 +30,9 @@ import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
 import com.amazon.kindle.kindlet.ui.KLabel;
 import com.amazon.kindle.kindlet.ui.KPanel;
-import com.amazon.kindle.kindlet.ui.KindletUIResources;
 
 public class ShortListScreen extends AbstractScreen {
 	
-	private static final Font FONT_TITLE = KindletUIResources.getInstance().getFont(
-			KindletUIResources.KFontFamilyName.SANS_SERIF, 36,
-			KindletUIResources.KFontStyle.BOLD_ITALIC, true);
-
-	private static final Font FONT_ITEM = KindletUIResources.getInstance().getFont(
-			KindletUIResources.KFontFamilyName.SANS_SERIF, 24,
-			KindletUIResources.KFontStyle.BOLD, true);
-
 	ShortListScreen(String opdsUrl) {
 		super(opdsUrl);
 	}
@@ -61,7 +51,7 @@ public class ShortListScreen extends AbstractScreen {
 
 		// add title
 		KLabel title = new KLabel(getPageTitle());
-		title.setFont(FONT_TITLE);
+		title.setFont(FONT_PAGE_TITLE);
 		container.add(title, c);
 
 		// add item links
@@ -70,7 +60,7 @@ public class ShortListScreen extends AbstractScreen {
 			final OpdsItem item = items[i];
 
 			KActionLabel label = new KActionLabel(item.getTitle());
-			label.setFont(FONT_ITEM);
+			label.setFont(FONT_LINK);
 			container.add(label, c);
 
 			label.addActionListener(new ActionListener() {
@@ -89,15 +79,6 @@ public class ShortListScreen extends AbstractScreen {
 
 	protected void updateContent(Container container) {
 		// nothing to update
-	}
-	
-	private String getPageTitle() {
-		String title = opdsPage.getTitle();
-		int index = title.indexOf(" — ");
-		if (index != -1) {
-			title = title.substring(0, index);
-		}
-		return title;
 	}
 
 }

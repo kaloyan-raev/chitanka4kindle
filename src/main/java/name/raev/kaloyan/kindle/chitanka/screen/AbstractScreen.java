@@ -20,6 +20,7 @@ package name.raev.kaloyan.kindle.chitanka.screen;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.PrintWriter;
@@ -32,8 +33,17 @@ import name.raev.kaloyan.kindle.chitanka.widget.KPager;
 import com.amazon.kindle.kindlet.ui.KPanel;
 import com.amazon.kindle.kindlet.ui.KProgress;
 import com.amazon.kindle.kindlet.ui.KTextArea;
+import com.amazon.kindle.kindlet.ui.KindletUIResources;
 
 public abstract class AbstractScreen {
+	
+	protected static final Font FONT_PAGE_TITLE = KindletUIResources.getInstance().getFont(
+			KindletUIResources.KFontFamilyName.SANS_SERIF, 16,
+			KindletUIResources.KFontStyle.BOLD_ITALIC, true);
+
+	protected static final Font FONT_LINK = KindletUIResources.getInstance().getFont(
+			KindletUIResources.KFontFamilyName.SANS_SERIF, 24,
+			KindletUIResources.KFontStyle.BOLD, true);
 
 	protected OpdsPage opdsPage;
 
@@ -73,6 +83,8 @@ public abstract class AbstractScreen {
 			KPanel content = new KPanel(new GridBagLayout());
 			container.add(content, c);
 
+			pageIndex = 0;
+			
 			// call the subclass to create the main content of the page
 			createContent(content);
 
@@ -166,6 +178,15 @@ public abstract class AbstractScreen {
 				return;
 			}
 		}
+	}
+	
+	protected String getPageTitle() {
+		String title = opdsPage.getTitle();
+		int index = title.indexOf(" — ");
+		if (index != -1) {
+			title = title.substring(0, index);
+		}
+		return title;
 	}
 
 }

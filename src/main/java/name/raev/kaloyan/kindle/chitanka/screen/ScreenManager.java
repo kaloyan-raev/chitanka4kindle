@@ -36,6 +36,24 @@ public class ScreenManager {
 					|| "/translators.opds".equals(path)
 					|| "/books.opds".equals(path) || "/texts.opds".equals(path)) {
 				return new ShortListScreen(opdsUrl);
+			} else if ("/authors/first-name.opds".equals(path)
+					|| "/authors/last-name.opds".equals(path)
+					|| "/translators/first-name.opds".equals(path)
+					|| "/translators/last-name.opds".equals(path)
+					|| "/books/alpha.opds".equals(path)
+					|| "/texts/alpha.opds".equals(path)
+					|| "/series.opds".equals(path)
+					|| "/sequences.opds".equals(path)) {
+				return new AlphaScreen(opdsUrl);
+			} else if ("/books/category.opds".equals(path)
+					|| "/texts/label.opds".equals(path)
+					|| "/texts/type.opds".equals(path)
+					|| path.indexOf("/country/") != -1
+					|| path.indexOf("/first-name/") != -1
+					|| path.indexOf("/last-name/") != -1
+					|| path.indexOf("/series/alpha/") != -1
+					|| path.indexOf("/sequences/alpha/") != -1) {
+				return new LongListScreen(opdsUrl);
 			}
 		} catch (MalformedURLException e) {
 			// return the default screen
