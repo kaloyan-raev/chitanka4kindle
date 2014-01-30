@@ -23,10 +23,7 @@ import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import name.raev.kaloyan.kindle.chitanka.ConnectivityManager;
 import name.raev.kaloyan.kindle.chitanka.OpdsItem;
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
@@ -103,22 +100,7 @@ public class BookListScreen extends AbstractScreen {
 				titleLabel.setText(opdsItem.getTitle());
 				titleLabel.setFocusable(true);
 
-				final int index = i;
-				titleLabel.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						OpdsItem opdsItem = opdsPage.getItem(pageIndex + index);
-						String link = opdsItem.getNavigationLink();
-						if (link != null) {
-							ConnectivityManager.getInstance().navigateTo(link);
-						} else {
-							link = opdsItem.getDownloadLink();
-							if (link != null) {
-								ConnectivityManager.getInstance().downloadBook(
-										link);
-							}
-						}
-					}
-				});
+				titleLabel.addActionListener(new LinkActionListener(this, i));
 			} else {
 				titleLabel.setFocusable(false);
 			}

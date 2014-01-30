@@ -22,10 +22,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import name.raev.kaloyan.kindle.chitanka.ConnectivityManager;
 import name.raev.kaloyan.kindle.chitanka.OpdsItem;
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
@@ -64,14 +61,7 @@ public class LongListScreen extends AbstractScreen {
 			label.setFont(FONT_LINK);
 			container.add(label, c);
 
-			final int index = i;
-			label.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					OpdsItem opdsItem = opdsPage.getItem(pageIndex + index);
-					ConnectivityManager.getInstance().navigateTo(
-							opdsItem.getNavigationLink());
-				}
-			});
+			label.addActionListener(new LinkActionListener(this, i));
 		}
 		
 		// add empty filler

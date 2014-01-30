@@ -21,10 +21,7 @@ package name.raev.kaloyan.kindle.chitanka.screen;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import name.raev.kaloyan.kindle.chitanka.ConnectivityManager;
 import name.raev.kaloyan.kindle.chitanka.OpdsItem;
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
@@ -63,12 +60,7 @@ public class ShortListScreen extends AbstractScreen {
 			label.setFont(FONT_LINK);
 			container.add(label, c);
 
-			label.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					ConnectivityManager.getInstance().navigateTo(
-							item.getNavigationLink());
-				}
-			});
+			label.addActionListener(new LinkActionListener(this, i));
 		}
 		
 		// add empty filler
