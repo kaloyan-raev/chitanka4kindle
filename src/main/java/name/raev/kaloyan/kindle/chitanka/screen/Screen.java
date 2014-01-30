@@ -35,7 +35,7 @@ import com.amazon.kindle.kindlet.ui.KProgress;
 import com.amazon.kindle.kindlet.ui.KTextArea;
 import com.amazon.kindle.kindlet.ui.KindletUIResources;
 
-public abstract class AbstractScreen {
+public abstract class Screen {
 	
 	protected static final Font FONT_PAGE_TITLE = KindletUIResources.getInstance().getFont(
 			KindletUIResources.KFontFamilyName.SANS_SERIF, 16,
@@ -51,7 +51,7 @@ public abstract class AbstractScreen {
 
 	private KPager pager;
 
-	AbstractScreen(String opdsUrl) {
+	Screen(String opdsUrl) {
 		opdsPage = new OpdsPage(opdsUrl);
 	}
 

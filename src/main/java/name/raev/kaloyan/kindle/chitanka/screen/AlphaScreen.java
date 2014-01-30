@@ -28,7 +28,7 @@ import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 import com.amazon.kindle.kindlet.ui.KLabel;
 import com.amazon.kindle.kindlet.ui.KPanel;
 
-public class AlphaScreen extends AbstractScreen {
+public class AlphaScreen extends Screen {
 	
 	AlphaScreen(String opdsUrl) {
 		super(opdsUrl);

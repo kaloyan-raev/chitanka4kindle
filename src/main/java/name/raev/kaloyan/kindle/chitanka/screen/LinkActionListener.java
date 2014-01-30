@@ -26,10 +26,10 @@ import name.raev.kaloyan.kindle.chitanka.OpdsItem;
 
 public class LinkActionListener implements ActionListener {
 	
-	private AbstractScreen screen;
+	private Screen screen;
 	private int index;
 	
-	public LinkActionListener(AbstractScreen screen, int index) {
+	public LinkActionListener(Screen screen, int index) {
 		this.screen = screen;
 		this.index = index;
 	}

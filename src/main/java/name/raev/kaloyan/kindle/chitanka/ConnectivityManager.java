@@ -23,7 +23,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Stack;
 
-import name.raev.kaloyan.kindle.chitanka.screen.AbstractScreen;
+import name.raev.kaloyan.kindle.chitanka.screen.Screen;
 import name.raev.kaloyan.kindle.chitanka.screen.ScreenManager;
 
 import com.amazon.kindle.kindlet.net.Connectivity;
@@ -57,7 +57,7 @@ public class ConnectivityManager {
 					}
 
 					public void connected() throws InterruptedException {
-						AbstractScreen screen = ScreenManager.createScreen(url);
+						Screen screen = ScreenManager.createScreen(url);
 						screen.display();
 
 						ScreenManager.setCurrentScreen(screen);

@@ -32,7 +32,7 @@ import com.amazon.kindle.kindlet.ui.KLabel;
 import com.amazon.kindle.kindlet.ui.KLabelMultiline;
 import com.amazon.kindle.kindlet.ui.KPanel;
 
-public class BookListScreen extends AbstractScreen {
+public class BookListScreen extends Screen {
 
 	BookListScreen(String opdsUrl) {
 		super(opdsUrl);

@@ -23,9 +23,9 @@ import java.net.URL;
 
 public class ScreenManager {
 
-	private static AbstractScreen currentScreen;
+	private static Screen currentScreen;
 
-	public static AbstractScreen createScreen(String opdsUrl) {
+	public static Screen createScreen(String opdsUrl) {
 		try {
 			URL url = new URL(opdsUrl);
 			String path = url.getPath();
@@ -63,11 +63,11 @@ public class ScreenManager {
 		return new BookListScreen(opdsUrl);
 	}
 
-	public static void setCurrentScreen(AbstractScreen screen) {
+	public static void setCurrentScreen(Screen screen) {
 		currentScreen = screen;
 	}
 
-	public static AbstractScreen getCurrentScreen() {
+	public static Screen getCurrentScreen() {
 		return currentScreen;
 	}
 

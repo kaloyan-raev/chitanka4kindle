@@ -28,7 +28,7 @@ import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 import com.amazon.kindle.kindlet.ui.KLabel;
 import com.amazon.kindle.kindlet.ui.KPanel;
 
-public class ShortListScreen extends AbstractScreen {
+public class ShortListScreen extends Screen {
 	
 	ShortListScreen(String opdsUrl) {
 		super(opdsUrl);

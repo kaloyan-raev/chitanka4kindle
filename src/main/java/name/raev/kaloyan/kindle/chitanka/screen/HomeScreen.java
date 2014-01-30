@@ -28,7 +28,7 @@ import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
 import com.amazon.kindle.kindlet.ui.KImage;
 
-public class HomeScreen extends AbstractScreen {
+public class HomeScreen extends Screen {
 
 	HomeScreen(String opdsUrl) {
 		super(opdsUrl);

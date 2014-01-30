@@ -29,7 +29,7 @@ import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 import com.amazon.kindle.kindlet.ui.KLabel;
 import com.amazon.kindle.kindlet.ui.KPanel;
 
-public class LongListScreen extends AbstractScreen {
+public class LongListScreen extends Screen {
 
 	LongListScreen(String opdsUrl) {
 		super(opdsUrl);
