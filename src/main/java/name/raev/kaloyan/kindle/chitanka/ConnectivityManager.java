@@ -29,6 +29,8 @@ import name.raev.kaloyan.kindle.chitanka.screen.ScreenManager;
 import com.amazon.kindle.kindlet.net.Connectivity;
 import com.amazon.kindle.kindlet.net.ConnectivityHandler;
 import com.amazon.kindle.kindlet.net.NetworkDisabledDetails;
+import com.amazon.kindle.kindlet.ui.KOptionPane;
+import com.amazon.kindle.kindlet.ui.KOptionPane.MessageDialogListener;
 import com.amazon.kindle.kindlet.ui.KProgress;
 import com.amazon.kindle.kindlet.ui.KTextArea;
 
@@ -65,7 +67,9 @@ public class ConnectivityManager {
 				}, true);
 	}
 
-	public void downloadBook(String href) {
+	public void downloadBook(String href) throws IllegalStateException,
+			IllegalArgumentException {
+		// start progress indicator
 		KProgress progress = ContextManager.getContext().getProgressIndicator();
 		progress.setIndeterminate(true);
 
@@ -83,8 +87,18 @@ public class ConnectivityManager {
 			root.repaint();
 		}
 
+		// stop progress indicator
 		progress.setIndeterminate(false);
-		progress.setString("Книгата е свалена");
+
+		// show info message
+		String title = "Книгата е свалена";
+		String message = "Ще намерите книгата в началото на главния екран на Kindle. Натиснете бутона Home, за да преминете към главния екран.";
+		KOptionPane.showMessageDialog(null, message, title,
+				new MessageDialogListener() {
+					public void onClose() {
+						// do nothing
+					}
+				});
 	}
 
 	public boolean canGoBack() {
