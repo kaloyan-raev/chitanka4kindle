@@ -52,7 +52,7 @@ public class BookListScreen extends Screen {
 		c.gridy = GridBagConstraints.RELATIVE;
 		c.insets = new Insets(8, 32, 8, 16);
 
-		KLabelMultiline title = new KLabelMultiline(opdsPage.getTitle());
+		KLabelMultiline title = new KLabelMultiline(getPageTitle());
 		title.setFont(FONT_PAGE_TITLE);
 		container.add(title, c);
 

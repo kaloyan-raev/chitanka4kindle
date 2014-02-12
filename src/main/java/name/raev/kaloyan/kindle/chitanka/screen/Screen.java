@@ -198,10 +198,17 @@ public abstract class Screen {
 	
 	protected String getPageTitle() {
 		String title = opdsPage.getTitle();
-		int index = title.indexOf(" — ");
+		
+		int index = title.indexOf(" — страница");
 		if (index != -1) {
 			title = title.substring(0, index);
 		}
+		
+		index = title.indexOf(" — Моята библиотека");
+		if (index != -1) {
+			title = title.substring(0, index);
+		}
+		
 		return title;
 	}
 
