@@ -52,10 +52,14 @@ public class BookListScreen extends Screen {
 		c.gridy = GridBagConstraints.RELATIVE;
 		c.insets = new Insets(8, 32, 8, 16);
 
-		container.add(new KLabelMultiline(opdsPage.getTitle()), c);
-		container.add(
-				new KLabel("Общо ".concat(Integer.toString(
-						opdsPage.getItemsCount()).concat(" заглавия"))), c);
+		KLabelMultiline title = new KLabelMultiline(opdsPage.getTitle());
+		title.setFont(FONT_PAGE_TITLE);
+		container.add(title, c);
+
+		KLabel total = new KLabel("Общо ".concat(Integer.toString(
+				opdsPage.getItemsCount()).concat(" заглавия")));
+		total.setFont(FONT_PAGE_SUBTITLE);
+		container.add(total, c);
 
 		OpdsItem[] opdsItems = opdsPage.getItems(pageIndex, getPageSize());
 
@@ -88,6 +92,7 @@ public class BookListScreen extends Screen {
 			content.add(image, cImage);
 
 			KActionLabel titleLabel = new KActionLabel();
+			titleLabel.setFont(FONT_LINK);
 			content.add(titleLabel, cTitle);
 
 			if (i < opdsItems.length) {

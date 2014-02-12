@@ -36,7 +36,7 @@ public class LongListScreen extends Screen {
 	}
 
 	protected int getPageSize() {
-		return 13;
+		return 14;
 	}
 
 	protected void createContent(Container container) {

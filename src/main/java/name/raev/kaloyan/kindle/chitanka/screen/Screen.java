@@ -38,11 +38,15 @@ import com.amazon.kindle.kindlet.ui.KindletUIResources;
 public abstract class Screen {
 	
 	protected static final Font FONT_PAGE_TITLE = KindletUIResources.getInstance().getFont(
-			KindletUIResources.KFontFamilyName.SANS_SERIF, 16,
+			KindletUIResources.KFontFamilyName.SANS_SERIF, 18,
 			KindletUIResources.KFontStyle.BOLD_ITALIC, true);
+	
+	protected static final Font FONT_PAGE_SUBTITLE = KindletUIResources.getInstance().getFont(
+			KindletUIResources.KFontFamilyName.SANS_SERIF, 16,
+			KindletUIResources.KFontStyle.PLAIN, true);
 
 	protected static final Font FONT_LINK = KindletUIResources.getInstance().getFont(
-			KindletUIResources.KFontFamilyName.SANS_SERIF, 24,
+			KindletUIResources.KFontFamilyName.SANS_SERIF, 22,
 			KindletUIResources.KFontStyle.BOLD, true);
 
 	protected OpdsPage opdsPage;
