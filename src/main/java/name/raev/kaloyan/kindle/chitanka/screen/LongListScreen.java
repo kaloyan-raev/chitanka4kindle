@@ -85,8 +85,6 @@ public class LongListScreen extends Screen {
 				titleLabel.setFocusable(false);
 			}
 		}
-
-		components[1].requestFocus();
 	}
 
 }

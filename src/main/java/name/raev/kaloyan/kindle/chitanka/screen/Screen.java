@@ -151,6 +151,7 @@ public abstract class Screen {
 					.getRootContainer().getComponent(0);
 
 			updateContent(content);
+			setFocusOnFirst(content);
 
 			pager.setPage(getCurrentPageIndex());
 		} catch (Throwable t) {
@@ -169,15 +170,26 @@ public abstract class Screen {
 		return opdsPage.getUrl();
 	}
 
-	protected void setFocusOnFirst(Container container) {
+	protected boolean setFocusOnFirst(Container container) {
 		Component[] components = container.getComponents();
+		
 		for (int i = 0; i < components.length; i++) {
 			Component component = components[i];
+			
+			// check children recursively
+			if (component instanceof Container) {
+				Container c = (Container) component;
+				if (setFocusOnFirst(c))
+					return true;
+			}
+			
 			if (component.isFocusable()) {
 				component.requestFocus();
-				return;
+				return true;
 			}
 		}
+		
+		return false;
 	}
 	
 	protected String getPageTitle() {

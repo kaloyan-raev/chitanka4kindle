@@ -111,8 +111,6 @@ public class BookListScreen extends Screen {
 		container.add(content, c);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weighty = 0.0;
-
-		content.getComponent(2).requestFocus();
 	}
 
 	protected void updateContent(Container container) {
@@ -140,8 +138,6 @@ public class BookListScreen extends Screen {
 				titleLabel.setFocusable(false);
 			}
 		}
-
-		components[2].requestFocus();
 	}
 
 }
