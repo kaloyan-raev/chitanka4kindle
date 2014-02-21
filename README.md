@@ -5,6 +5,8 @@
 
 Връзката между електронния четец и сайта на Читанка се осъществява през Wi-Fi.
 
+[![Читанка за Kindle](http://img.youtube.com/vi/Ym1GvY1qjwg/0.jpg)](http://www.youtube.com/watch?v=Ym1GvY1qjwg)
+
 Функционалност
 ==============
 
