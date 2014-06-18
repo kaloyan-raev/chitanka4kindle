@@ -38,7 +38,7 @@ public class Utils {
 	 * 
 	 * <p>
 	 * This method will fail with security exception with the default security
-	 * policy on Kindle. The following persmission must be added to the
+	 * policy on Kindle. The following permission must be added to the
 	 * /opt/amazon/ebook/security/external.policy file inside the 'grant
 	 * signedBy "Kindlet" {' block:
 	 * </p>
