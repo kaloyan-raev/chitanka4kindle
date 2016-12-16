@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -72,7 +73,7 @@ public class Utils {
 	}
 
 	public static void downloadMobiFromEpubUrl(String href) throws IOException {
-		URL urlEpub = new URL(href);
+		URL urlEpub = getUrlFromLink(href);
 		
 		String path = urlEpub.getFile();
 		path = path.substring(0, path.length() - 4).concat("mobi");
@@ -105,5 +106,18 @@ public class Utils {
 		URL url = Utils.class.getClassLoader().getResource(fileName);
 		return Toolkit.getDefaultToolkit().getImage(url);
 	}
-
+	
+	public static URL getUrlFromLink(String link) throws MalformedURLException {
+		return new URL(new URL(ConnectivityManager.BASE_URL), link);
+	}
+	
+	public static String getUrlFromLinkAsString(String link) {
+		try {
+			return getUrlFromLink(link).toString();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 }

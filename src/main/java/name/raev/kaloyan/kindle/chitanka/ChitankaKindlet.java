@@ -77,7 +77,7 @@ public class ChitankaKindlet extends AbstractKindlet {
 	}
 
 	public void start() {
-		ConnectivityManager.getInstance().display("http://chitanka.info/catalog.opds");
+		ConnectivityManager.getInstance().display(ConnectivityManager.BASE_URL.concat("/catalog.opds"));
 	}
 
 }

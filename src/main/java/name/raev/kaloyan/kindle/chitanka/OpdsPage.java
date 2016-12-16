@@ -95,7 +95,7 @@ public class OpdsPage {
 	private void parseNextPage() {
 		SyndLink nextLink = getNextLink(currentPage);
 		if (nextLink != null) {
-			currentPage = parse("http://chitanka.info".concat(nextLink.getHref()));
+			currentPage = parse(Utils.getUrlFromLinkAsString(nextLink.getHref()));
 			entries.addAll(currentPage.getEntries());
 		}
 	}

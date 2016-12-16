@@ -18,9 +18,6 @@
  */
 package name.raev.kaloyan.kindle.chitanka;
 
-import java.awt.Container;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Stack;
 
 import name.raev.kaloyan.kindle.chitanka.screen.Screen;
@@ -32,9 +29,10 @@ import com.amazon.kindle.kindlet.net.NetworkDisabledDetails;
 import com.amazon.kindle.kindlet.ui.KOptionPane;
 import com.amazon.kindle.kindlet.ui.KOptionPane.MessageDialogListener;
 import com.amazon.kindle.kindlet.ui.KProgress;
-import com.amazon.kindle.kindlet.ui.KTextArea;
 
 public class ConnectivityManager {
+	
+	public static final String BASE_URL = "http://chitanka.info";
 
 	private static ConnectivityManager instance;
 
@@ -103,11 +101,11 @@ public class ConnectivityManager {
 		display((String) history.pop());
 	}
 
-	public void navigateTo(String url) {
+	public void navigateTo(String link) {
 		// push the current page to history
 		history.push(ScreenManager.getCurrentScreen().getUrl());
 		// navigate to the selected page
-		display(url);
+		display(Utils.getUrlFromLinkAsString(link));
 	}
-
+	
 }

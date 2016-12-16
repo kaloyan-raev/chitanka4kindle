@@ -56,7 +56,7 @@ public class OpdsItem {
 				SyndLink imageLink = (SyndLink) links.get(5);
 				String href = imageLink.getHref();
 				href = replace(href, ".200.", ".65.");
-				URL url = new URL(href);
+				URL url = Utils.getUrlFromLink(href);
 				return Toolkit.getDefaultToolkit().createImage(url);
 			} catch (IOException e) {
 				e.printStackTrace();
