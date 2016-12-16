@@ -77,14 +77,7 @@ public class ConnectivityManager {
 			Utils.downloadMobiFromEpubUrl(href);
 			Utils.rescanDocuments();
 		} catch (Throwable t) {
-			Container root = ContextManager.getContext().getRootContainer();
-			root.removeAll();
-
-			StringWriter sw = new StringWriter();
-			t.printStackTrace(new PrintWriter(sw));
-
-			root.add(new KTextArea(sw.toString()));
-			root.repaint();
+			Screen.displayError(t);
 		}
 
 		// stop progress indicator

@@ -48,6 +48,10 @@ public abstract class Screen {
 	protected static final Font FONT_LINK = KindletUIResources.getInstance().getFont(
 			KindletUIResources.KFontFamilyName.SANS_SERIF, 22,
 			KindletUIResources.KFontStyle.BOLD, true);
+	
+	protected static final Font FONT_ERROR = KindletUIResources.getInstance().getFont(
+			KindletUIResources.KFontFamilyName.SANS_SERIF, 10,
+			KindletUIResources.KFontStyle.PLAIN, true);
 
 	protected OpdsPage opdsPage;
 
@@ -98,10 +102,7 @@ public abstract class Screen {
 
 			createPager(container);
 		} catch (Throwable t) {
-			StringWriter sw = new StringWriter();
-			t.printStackTrace(new PrintWriter(sw));
-			container.removeAll();
-			container.add(new KTextArea(sw.toString()));
+			displayError(t);
 		}
 
 		progress.setIndeterminate(false);
@@ -159,12 +160,7 @@ public abstract class Screen {
 
 			pager.setPage(getCurrentPageIndex());
 		} catch (Throwable t) {
-			StringWriter sw = new StringWriter();
-			t.printStackTrace(new PrintWriter(sw));
-			Container container = ContextManager.getContext()
-					.getRootContainer();
-			container.removeAll();
-			container.add(new KTextArea(sw.toString()));
+			displayError(t);
 		}
 
 		ContextManager.getContext().getRootContainer().repaint();
@@ -210,6 +206,26 @@ public abstract class Screen {
 		}
 		
 		return title;
+	}
+	
+	public static void displayError(Throwable t) {
+		StringWriter sw = new StringWriter();
+		t.printStackTrace(new PrintWriter(sw));
+		
+		Container container = ContextManager.getContext().getRootContainer();
+		container.removeAll();
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridy = GridBagConstraints.RELATIVE;
+		c.weightx = 1.0;
+		c.weighty = 1.0;
+		
+		KTextArea text = new KTextArea(sw.toString());
+		text.setFont(FONT_ERROR);
+		text.setRows(70);
+		container.add(text, c);
+		
+		container.repaint();
 	}
 
 }

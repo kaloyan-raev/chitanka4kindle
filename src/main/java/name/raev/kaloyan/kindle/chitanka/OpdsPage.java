@@ -111,8 +111,7 @@ public class OpdsPage {
 			SyndFeedInput input = new SyndFeedInput();
 			return input.build(new XmlReader(feedUrl));
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			throw new RuntimeException("Failed parsing: " + address, e);
 		}
 	}
 
@@ -160,5 +159,5 @@ public class OpdsPage {
 	public String getUrl() {
 		return url;
 	}
-
+	
 }
