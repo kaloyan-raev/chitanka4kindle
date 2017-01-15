@@ -1,6 +1,8 @@
 Читанка за Kindle
 =================
 
+[![Build Status](https://travis-ci.org/kaloyan-raev/chitanka4kindle.svg?branch=master)](https://travis-ci.org/kaloyan-raev/chitanka4kindle)
+
 Приложение за електронния четец Kindle, което позволява да се разглежда каталога на [Читанка](http://chitanka.info/) и да се свалят книги директно на устройството без помощта на компютър и кабел.
 
 Връзката между електронния четец и сайта на Читанка се осъществява през Wi-Fi.
