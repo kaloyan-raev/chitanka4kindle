@@ -26,14 +26,14 @@ import java.awt.GridBagLayout;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import name.raev.kaloyan.kindle.chitanka.ContextManager;
-import name.raev.kaloyan.kindle.chitanka.OpdsPage;
-import name.raev.kaloyan.kindle.chitanka.widget.KPager;
-
 import com.amazon.kindle.kindlet.ui.KPanel;
-import com.amazon.kindle.kindlet.ui.KProgress;
 import com.amazon.kindle.kindlet.ui.KTextArea;
 import com.amazon.kindle.kindlet.ui.KindletUIResources;
+
+import name.raev.kaloyan.kindle.chitanka.ContextManager;
+import name.raev.kaloyan.kindle.chitanka.OpdsPage;
+import name.raev.kaloyan.kindle.chitanka.Utils;
+import name.raev.kaloyan.kindle.chitanka.widget.KPager;
 
 public abstract class Screen {
 	
@@ -70,10 +70,9 @@ public abstract class Screen {
 	protected abstract int getPageSize();
 
 	public void display() {
+		Utils.startProgressIndicator();
+		
 		Container container = ContextManager.getContext().getRootContainer();
-
-		KProgress progress = ContextManager.getContext().getProgressIndicator();
-		progress.setIndeterminate(true);
 
 		// clear the content of the container
 		container.removeAll();
@@ -103,9 +102,9 @@ public abstract class Screen {
 			createPager(container);
 		} catch (Throwable t) {
 			displayError(t);
+		} finally {
+			Utils.stopProgressIndicator();
 		}
-
-		progress.setIndeterminate(false);
 		container.repaint();
 	}
 
@@ -132,14 +131,13 @@ public abstract class Screen {
 	public void nextPage() {
 		int count = opdsPage.getItemsCount();
 		if (count - pageIndex > getPageSize()) {
-			KProgress progress = ContextManager.getContext()
-					.getProgressIndicator();
-			progress.setIndeterminate(true);
-
-			pageIndex += getPageSize();
-			updateScreen();
-
-			progress.setIndeterminate(false);
+			Utils.startProgressIndicator();
+			try {
+				pageIndex += getPageSize();
+				updateScreen();
+			} finally {
+				Utils.stopProgressIndicator();
+			}
 		}
 	}
 

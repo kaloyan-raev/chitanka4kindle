@@ -31,6 +31,8 @@ import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import com.amazon.kindle.kindlet.ui.KProgress;
+
 public class Utils {
 
 	/**
@@ -118,6 +120,16 @@ public class Utils {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public static void startProgressIndicator() {
+		KProgress progress = ContextManager.getContext().getProgressIndicator();
+		progress.setIndeterminate(true);
+	}
+	
+	public static void stopProgressIndicator() {
+		KProgress progress = ContextManager.getContext().getProgressIndicator();
+		progress.setIndeterminate(false);
 	}
 	
 }

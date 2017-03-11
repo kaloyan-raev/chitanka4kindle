@@ -20,15 +20,14 @@ package name.raev.kaloyan.kindle.chitanka;
 
 import java.util.Stack;
 
-import name.raev.kaloyan.kindle.chitanka.screen.Screen;
-import name.raev.kaloyan.kindle.chitanka.screen.ScreenManager;
-
 import com.amazon.kindle.kindlet.net.Connectivity;
 import com.amazon.kindle.kindlet.net.ConnectivityHandler;
 import com.amazon.kindle.kindlet.net.NetworkDisabledDetails;
 import com.amazon.kindle.kindlet.ui.KOptionPane;
 import com.amazon.kindle.kindlet.ui.KOptionPane.MessageDialogListener;
-import com.amazon.kindle.kindlet.ui.KProgress;
+
+import name.raev.kaloyan.kindle.chitanka.screen.Screen;
+import name.raev.kaloyan.kindle.chitanka.screen.ScreenManager;
 
 public class ConnectivityManager {
 	
@@ -52,8 +51,7 @@ public class ConnectivityManager {
 				new ConnectivityHandler() {
 					public void disabled(NetworkDisabledDetails details)
 							throws InterruptedException {
-						// TODO Auto-generated method stub
-
+						// TODO show error message
 					}
 
 					public void connected() throws InterruptedException {
@@ -67,19 +65,16 @@ public class ConnectivityManager {
 
 	public void downloadBook(String href) throws IllegalStateException,
 			IllegalArgumentException {
-		// start progress indicator
-		KProgress progress = ContextManager.getContext().getProgressIndicator();
-		progress.setIndeterminate(true);
+		Utils.startProgressIndicator();
 
 		try {
 			Utils.downloadMobiFromEpubUrl(href);
 			Utils.rescanDocuments();
 		} catch (Throwable t) {
 			Screen.displayError(t);
+		} finally {
+			Utils.stopProgressIndicator();
 		}
-
-		// stop progress indicator
-		progress.setIndeterminate(false);
 
 		// show info message
 		String title = "Книгата е свалена";
