@@ -65,7 +65,7 @@ public class ConnectivityManager {
 
 	public void downloadBook(String href) throws IllegalStateException,
 			IllegalArgumentException {
-		Utils.startProgressIndicator();
+		Utils.startProgressIndicator("Книгата се изтегля");
 
 		try {
 			Utils.downloadMobiFromEpubUrl(href);
@@ -77,7 +77,7 @@ public class ConnectivityManager {
 		}
 
 		// show info message
-		String title = "Книгата е свалена";
+		String title = "Книгата е изтеглена";
 		String message = "Ще намерите книгата в началото на главния екран на Kindle. Натиснете бутона Home, за да преминете към главния екран.";
 		KOptionPane.showMessageDialog(null, message, title,
 				new MessageDialogListener() {

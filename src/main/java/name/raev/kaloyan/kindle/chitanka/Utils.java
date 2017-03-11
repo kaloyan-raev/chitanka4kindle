@@ -123,8 +123,13 @@ public class Utils {
 	}
 	
 	public static void startProgressIndicator() {
+		startProgressIndicator(null);
+	}
+	
+	public static void startProgressIndicator(String status) {
 		KProgress progress = ContextManager.getContext().getProgressIndicator();
 		progress.setIndeterminate(true);
+		progress.setString(status);
 	}
 	
 	public static void stopProgressIndicator() {
