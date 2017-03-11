@@ -84,7 +84,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<keystore>${project.basedir}/res/developer.keystore</keystore>
+					<keystore>${project.basedir}/installer/developer.keystore</keystore>
 					<storepass>password</storepass>
 					<keypass></keypass>
 				</configuration>
@@ -125,6 +125,23 @@
 									<destFileName>${project.artifactId}.azw2</destFileName>
 								</artifactItem>
 							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>exec-maven-plugin</artifactId>
+				<groupId>org.codehaus.mojo</groupId>
+				<executions>
+					<execution>
+						<id>Package Installers</id>
+						<phase>package</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>${basedir}/installer/build-updates.sh</executable>
+							<workingDirectory>${basedir}/installer</workingDirectory>    
 						</configuration>
 					</execution>
 				</executions>

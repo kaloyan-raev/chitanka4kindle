@@ -1,3 +1,6 @@
 target/
-/dependency-reduced-pom.xml
-/crash.log
+*.azw2
+*.bin
+crash.log
+dependency-reduced-pom.xml
+kindletool
