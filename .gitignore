@@ -1,6 +1,7 @@
 target/
 *.azw2
 *.bin
+*.gz
 crash.log
 dependency-reduced-pom.xml
 kindletool
