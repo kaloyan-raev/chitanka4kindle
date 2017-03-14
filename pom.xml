@@ -84,7 +84,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<keystore>${project.basedir}/res/developer.keystore</keystore>
+					<keystore>${project.basedir}/installer/developer.keystore</keystore>
 					<storepass>password</storepass>
 					<keypass></keypass>
 				</configuration>
@@ -129,6 +129,59 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
+								<if>
+									<available file="installer/kindletool"/>
+									<else>
+										<get src="https://www.mobileread.com/forums/attachment.php?attachmentid=138825&amp;d=1433027804" dest="installer/kindletool-v1.6.4-linux-x86_64.tar.gz"/>
+										<untar src="installer/kindletool-v1.6.4-linux-x86_64.tar.gz" dest="installer" compression="gzip">
+											<patternset>
+												<include name="kindletool"/>
+											</patternset>
+										</untar>
+										<chmod file="installer/kindletool" perm="u+x"/>
+									</else>
+								</if>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>ant-contrib</groupId>
+						<artifactId>ant-contrib</artifactId>
+						<version>20020829</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<artifactId>exec-maven-plugin</artifactId>
+				<groupId>org.codehaus.mojo</groupId>
+				<executions>
+					<execution>
+						<id>Package Installers</id>
+						<phase>package</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>${basedir}/installer/build-updates.sh</executable>
+							<workingDirectory>${basedir}/installer</workingDirectory>    
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
@@ -145,17 +198,17 @@
 		</dependency>
 	</dependencies>
 	<repositories>
-	<repository>
-		<id>bintray</id>
-		<url>http://dl.bintray.com/kaloyan-raev/maven</url>
-		<releases>
-			<enabled>true</enabled>
-		</releases>
-		<snapshots>
-			<enabled>false</enabled>
-		</snapshots>
-	</repository>
-</repositories>
+		<repository>
+			<id>bintray</id>
+			<url>http://dl.bintray.com/kaloyan-raev/maven</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 	<organization>
 		<name>Калоян Раев</name>
 	</organization>
