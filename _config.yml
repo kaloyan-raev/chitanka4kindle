@@ -1,7 +1,7 @@
 title: Читанка за Kindle
 description: Изтегляйте лесно и бързо книги от Читанка на Kindle
 google_analytics: 
-show_downloads: true
+show_downloads: false
 theme: jekyll-theme-midnight
 
 gems:
