@@ -132,7 +132,7 @@ public class OpdsPage {
 	}
 
 	public OpdsItem[] getItems(int index, int length) {
-		if (entries.size() < index + length) {
+		while (entries.size() < index + length) {
 			parseNextPage();
 		}
 

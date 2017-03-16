@@ -80,15 +80,7 @@ public abstract class Screen {
 		container.setLayout(new GridBagLayout());
 
 		try {
-			GridBagConstraints c = new GridBagConstraints();
-			c.fill = GridBagConstraints.BOTH;
-			c.weightx = 1.0;
-			c.weighty = 1.0;
-			c.gridx = 0;
-			c.gridy = GridBagConstraints.RELATIVE;
-
-			KPanel content = new KPanel(new GridBagLayout());
-			container.add(content, c);
+			KPanel content = createContentPanel(container);
 
 			pageIndex = 0;
 			
@@ -106,6 +98,20 @@ public abstract class Screen {
 			Utils.stopProgressIndicator();
 		}
 		container.repaint();
+	}
+
+	private KPanel createContentPanel(Container container) {
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx = 1.0;
+		c.weighty = 1.0;
+		c.gridx = 0;
+		c.gridy = GridBagConstraints.RELATIVE;
+
+		KPanel content = new KPanel(new GridBagLayout());
+		container.add(content, c);
+
+		return content;
 	}
 
 	private void createPager(Container container) {
@@ -150,10 +156,20 @@ public abstract class Screen {
 
 	private void updateScreen() {
 		try {
-			KPanel content = (KPanel) ContextManager.getContext()
-					.getRootContainer().getComponent(0);
+			Container container = ContextManager.getContext().getRootContainer();
+			Component firstComponent = container.getComponent(0);
+			KPanel content;
+			if (firstComponent instanceof KPanel) {
+				content = (KPanel) firstComponent;
+				updateContent(content);
+			} else {
+				// perhaps an error was displayed - recreate the screen
+				container.removeAll();
+				content = createContentPanel(container);
+				createContent(content);
+				createPager(container);
+			}
 
-			updateContent(content);
 			setFocusOnFirst(content);
 
 			pager.setPage(getCurrentPageIndex());
