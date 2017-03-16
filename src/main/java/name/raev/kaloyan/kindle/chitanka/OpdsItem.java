@@ -57,7 +57,7 @@ public class OpdsItem {
 				String href = imageLink.getHref();
 				href = replace(href, ".200.", ".65.");
 				URL url = Utils.getUrlFromLink(href);
-				return Toolkit.getDefaultToolkit().createImage(url);
+				return Toolkit.getDefaultToolkit().getImage(url);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
