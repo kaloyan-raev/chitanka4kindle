@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Kaloyan Raev
+ * Copyright 2014-2017 Kaloyan Raev
  * 
  * This file is part of chitanka4kindle.
  * 
@@ -51,7 +51,14 @@ public class ConnectivityManager {
 				new ConnectivityHandler() {
 					public void disabled(NetworkDisabledDetails details)
 							throws InterruptedException {
-						// TODO show error message
+						// show error message
+						String title = "Неуспешно свързване";
+						String message = "Приложението не може да се свърже с мрежата. Уверете се, че сте в обхвата на безжична мрежа.\n\nЗатворете това съобщение, за да опитате отново.";
+						KOptionPane.showMessageDialog(null, message, title, new MessageDialogListener() {
+							public void onClose() {
+								display(url);
+							}
+						});
 					}
 
 					public void connected() throws InterruptedException {
