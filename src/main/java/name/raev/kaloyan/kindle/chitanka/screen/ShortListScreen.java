@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Kaloyan Raev
+ * Copyright 2014-2017 Kaloyan Raev
  * 
  * This file is part of chitanka4kindle.
  * 
@@ -21,12 +21,13 @@ package name.raev.kaloyan.kindle.chitanka.screen;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-
-import name.raev.kaloyan.kindle.chitanka.OpdsItem;
-import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
+import java.io.IOException;
 
 import com.amazon.kindle.kindlet.ui.KLabel;
 import com.amazon.kindle.kindlet.ui.KPanel;
+
+import name.raev.kaloyan.kindle.chitanka.OpdsItem;
+import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
 public class ShortListScreen extends Screen {
 	
@@ -38,7 +39,7 @@ public class ShortListScreen extends Screen {
 		return 8;
 	}
 
-	protected void createContent(Container container) {
+	protected void createContent(Container container) throws IOException {
 		GridBagConstraints c = new GridBagConstraints();
 		c.weightx = 1.0;
 		c.gridx = 0;

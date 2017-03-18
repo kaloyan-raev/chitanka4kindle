@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Kaloyan Raev
+ * Copyright 2014-2017 Kaloyan Raev
  * 
  * This file is part of chitanka4kindle.
  * 
@@ -18,6 +18,7 @@
  */
 package name.raev.kaloyan.kindle.chitanka;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -45,12 +46,12 @@ public class OpdsPage {
 		this.url = url;
 	}
 
-	public String getTitle() {
+	public String getTitle() throws IOException {
 		parseFirstPage();
 		return firstPage.getTitle();
 	}
 
-	public int getItemsCount() {
+	public int getItemsCount() throws IOException {
 		if (itemsCount == Integer.MIN_VALUE) {
 			parsePagesCount();
 	
@@ -66,7 +67,7 @@ public class OpdsPage {
 		return itemsCount;
 	}
 
-	private void parsePagesCount() {
+	private void parsePagesCount() throws IOException {
 		parseFirstPage();
 
 		String title = firstPage.getTitle();
@@ -84,7 +85,7 @@ public class OpdsPage {
 		}
 	}
 
-	private void parseFirstPage() {
+	private void parseFirstPage() throws IOException {
 		if (firstPage == null) {
 			firstPage = parse(url);
 			entries.addAll(firstPage.getEntries());
@@ -92,7 +93,7 @@ public class OpdsPage {
 		}
 	}
 
-	private void parseNextPage() {
+	private void parseNextPage() throws IOException {
 		SyndLink nextLink = getNextLink(currentPage);
 		if (nextLink != null) {
 			currentPage = parse(Utils.getUrlFromLinkAsString(nextLink.getHref()));
@@ -100,16 +101,18 @@ public class OpdsPage {
 		}
 	}
 	
-	private SyndFeed parsePage(int pageNumber) {
+	private SyndFeed parsePage(int pageNumber) throws IOException {
 		String pageUrl = url.concat("/").concat(Integer.toString(pageNumber));
 		return parse(pageUrl);
 	}
 
-	private SyndFeed parse(String address) {
+	private SyndFeed parse(String address) throws IOException {
 		try {
 			URL feedUrl = new URL(address);
 			SyndFeedInput input = new SyndFeedInput();
 			return input.build(new XmlReader(feedUrl));
+		} catch (IOException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new RuntimeException("Failed parsing: " + address, e);
 		}
@@ -131,7 +134,7 @@ public class OpdsPage {
 		return null;
 	}
 
-	public OpdsItem[] getItems(int index, int length) {
+	public OpdsItem[] getItems(int index, int length) throws IOException {
 		while (entries.size() < index + length) {
 			parseNextPage();
 		}
@@ -152,7 +155,7 @@ public class OpdsPage {
 		return null;
 	}
 
-	public OpdsItem[] getItems() {
+	public OpdsItem[] getItems() throws IOException {
 		return getItems(0, getItemsCount());
 	}
 

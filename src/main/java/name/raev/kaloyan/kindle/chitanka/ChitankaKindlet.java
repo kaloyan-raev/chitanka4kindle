@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Kaloyan Raev
+ * Copyright 2014-2017 Kaloyan Raev
  * 
  * This file is part of chitanka4kindle.
  * 
@@ -22,11 +22,11 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 
-import name.raev.kaloyan.kindle.chitanka.screen.ScreenManager;
-
 import com.amazon.kindle.kindlet.AbstractKindlet;
 import com.amazon.kindle.kindlet.KindletContext;
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
+
+import name.raev.kaloyan.kindle.chitanka.screen.ScreenManager;
 
 public class ChitankaKindlet extends AbstractKindlet {
 
@@ -54,20 +54,12 @@ public class ChitankaKindlet extends AbstractKindlet {
 						case KindleKeyCodes.VK_LEFT_HAND_SIDE_TURN_PAGE:
 						case KindleKeyCodes.VK_RIGHT_HAND_SIDE_TURN_PAGE:
 							key.consume();
-							try {
-								ScreenManager.getCurrentScreen().nextPage();
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+							ScreenManager.getCurrentScreen().nextPage();
 							return true;
 
 						case KindleKeyCodes.VK_TURN_PAGE_BACK:
 							key.consume();
-							try {
-								ScreenManager.getCurrentScreen().previousPage();
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+							ScreenManager.getCurrentScreen().previousPage();
 							return true;
 						}
 

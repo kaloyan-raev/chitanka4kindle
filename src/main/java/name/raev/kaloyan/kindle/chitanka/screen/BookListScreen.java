@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Kaloyan Raev
+ * Copyright 2014-2017 Kaloyan Raev
  * 
  * This file is part of chitanka4kindle.
  * 
@@ -23,14 +23,15 @@ import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-
-import name.raev.kaloyan.kindle.chitanka.OpdsItem;
-import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
+import java.io.IOException;
 
 import com.amazon.kindle.kindlet.ui.KImage;
 import com.amazon.kindle.kindlet.ui.KLabel;
 import com.amazon.kindle.kindlet.ui.KLabelMultiline;
 import com.amazon.kindle.kindlet.ui.KPanel;
+
+import name.raev.kaloyan.kindle.chitanka.OpdsItem;
+import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
 public class BookListScreen extends Screen {
 
@@ -42,7 +43,7 @@ public class BookListScreen extends Screen {
 		return 6;
 	}
 
-	protected void createContent(Container container) {
+	protected void createContent(Container container) throws IOException {
 		container.setLayout(new GridBagLayout());
 
 		GridBagConstraints c = new GridBagConstraints();
@@ -118,7 +119,7 @@ public class BookListScreen extends Screen {
 		c.weighty = 0.0;
 	}
 
-	protected void updateContent(Container container) {
+	protected void updateContent(Container container) throws IOException {
 		OpdsItem[] opdsItems = opdsPage.getItems(pageIndex, getPageSize());
 
 		KPanel content = (KPanel) container.getComponent(2);

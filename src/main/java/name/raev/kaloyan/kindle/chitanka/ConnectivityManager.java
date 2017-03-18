@@ -18,13 +18,12 @@
  */
 package name.raev.kaloyan.kindle.chitanka;
 
+import java.io.IOException;
 import java.util.Stack;
 
 import com.amazon.kindle.kindlet.net.Connectivity;
 import com.amazon.kindle.kindlet.net.ConnectivityHandler;
 import com.amazon.kindle.kindlet.net.NetworkDisabledDetails;
-import com.amazon.kindle.kindlet.ui.KOptionPane;
-import com.amazon.kindle.kindlet.ui.KOptionPane.MessageDialogListener;
 
 import name.raev.kaloyan.kindle.chitanka.screen.Screen;
 import name.raev.kaloyan.kindle.chitanka.screen.ScreenManager;
@@ -51,47 +50,52 @@ public class ConnectivityManager {
 				new ConnectivityHandler() {
 					public void disabled(NetworkDisabledDetails details)
 							throws InterruptedException {
-						// show error message
-						String title = "Неуспешно свързване";
-						String message = "Приложението не може да се свърже с мрежата. Уверете се, че сте в обхвата на безжична мрежа.\n\nЗатворете това съобщение, за да опитате отново.";
-						KOptionPane.showMessageDialog(null, message, title, new MessageDialogListener() {
-							public void onClose() {
-								display(url);
-							}
-						});
+						handleNetworkError();
+						display(url);
 					}
 
 					public void connected() throws InterruptedException {
 						Screen screen = ScreenManager.createScreen(url);
-						screen.display();
+						try {
+							screen.display();
+						} catch (IOException e) {
+							handleNetworkError();
+							display(url);
+						}
 
 						ScreenManager.setCurrentScreen(screen);
 					}
 				}, true);
 	}
 
-	public void downloadBook(String href) throws IllegalStateException,
-			IllegalArgumentException {
+	public void downloadBook(final String href) {
 		Utils.startProgressIndicator("Книгата се изтегля");
+		Connectivity connectivity = ContextManager.getContext().getConnectivity();
+		connectivity.submitSingleAttemptConnectivityRequest(new ConnectivityHandler() {
+			public void disabled(NetworkDisabledDetails details) throws InterruptedException {
+				handleNetworkError();
+				downloadBook(href);
+			}
 
-		try {
-			Utils.downloadMobiFromEpubUrl(href);
-			Utils.rescanDocuments();
-		} catch (Throwable t) {
-			Screen.displayError(t);
-		} finally {
-			Utils.stopProgressIndicator();
-		}
+			public void connected() throws InterruptedException {
+				try {
+					Utils.downloadMobiFromEpubUrl(href);
+					Utils.rescanDocuments();
+				} catch (IOException e) {
+					handleNetworkError();
+					downloadBook(href);
+					return;
+				} finally {
+					Utils.stopProgressIndicator();
+				}
 
-		// show info message
-		String title = "Книгата е изтеглена";
-		String message = "Ще намерите книгата в началото на главния екран на Kindle. Натиснете бутона Home, за да преминете към главния екран.";
-		KOptionPane.showMessageDialog(null, message, title,
-				new MessageDialogListener() {
-					public void onClose() {
-						// do nothing
-					}
-				});
+				// show info message
+				String title = "Книгата е изтеглена";
+				String message = "Ще намерите книгата в началото на главния екран на Kindle. Натиснете бутона Home, за да преминете към главния екран.";
+				DialogManager.displayDialog(message, title);
+			}
+		}, true);
+
 	}
 
 	public boolean canGoBack() {
@@ -110,4 +114,11 @@ public class ConnectivityManager {
 		display(Utils.getUrlFromLinkAsString(link));
 	}
 	
+	public void handleNetworkError() throws InterruptedException {
+		Utils.stopProgressIndicator();
+		String title = "Неуспешно свързване";
+		String message = "Приложението не може да се свърже с мрежата. Уверете се, че сте в обхвата на безжична мрежа.\n\nЗатворете това съобщение, за да опитате отново.";
+		DialogManager.displayDialog(message, title);
+	}
+
 }
