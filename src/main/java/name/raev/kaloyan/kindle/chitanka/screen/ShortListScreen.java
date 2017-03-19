@@ -67,7 +67,9 @@ public class ShortListScreen extends Screen {
 		// add empty filler
 		c.fill = GridBagConstraints.BOTH;
 		c.weighty = 1.0; // request any extra vertical space
-		container.add(new KPanel(), c);
+		KPanel filler = new KPanel();
+		filler.setFocusable(false);
+		container.add(filler, c);
 	}
 
 	protected void updateContent(Container container) {
