@@ -21,12 +21,14 @@ package name.raev.kaloyan.kindle.chitanka;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 import com.amazon.kindle.kindlet.AbstractKindlet;
 import com.amazon.kindle.kindlet.KindletContext;
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
 
 import name.raev.kaloyan.kindle.chitanka.screen.ScreenManager;
+import name.raev.kaloyan.kindle.chitanka.screen.SplashScreen;
 
 public class ChitankaKindlet extends AbstractKindlet {
 
@@ -69,6 +71,11 @@ public class ChitankaKindlet extends AbstractKindlet {
 	}
 
 	public void start() {
+		try {
+			new SplashScreen().display();
+		} catch (IOException e) {
+			// nothing to do
+		}
 		ConnectivityManager.getInstance().display(ConnectivityManager.BASE_URL.concat("/catalog.opds"));
 	}
 
