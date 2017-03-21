@@ -21,13 +21,17 @@ package name.raev.kaloyan.kindle.chitanka.screen;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.Image;
+import java.awt.Insets;
 import java.io.IOException;
 
+import com.amazon.kindle.kindlet.ui.KButton;
 import com.amazon.kindle.kindlet.ui.KImage;
+import com.amazon.kindle.kindlet.ui.KTextField;
 
 import name.raev.kaloyan.kindle.chitanka.OpdsItem;
 import name.raev.kaloyan.kindle.chitanka.Utils;
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
+import name.raev.kaloyan.kindle.chitanka.widget.KBorderedPanel;
 
 public class HomeScreen extends Screen {
 
@@ -42,6 +46,7 @@ public class HomeScreen extends Screen {
 	protected void createContent(Container container) throws IOException {
 		addLogo(container);
 		addLinks(container);
+		addSearch(container);
 	}
 
 	protected void updateContent(Container container) {
@@ -79,6 +84,29 @@ public class HomeScreen extends Screen {
 
 			label.addActionListener(new LinkActionListener(this, i));
 		}
+	}
+
+	private void addSearch(Container container) {
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.gridy = GridBagConstraints.RELATIVE;
+		c.weightx = 1.0;
+		c.weighty = 1.0;
+
+		KBorderedPanel panel = new KBorderedPanel();
+		container.add(panel, c);
+
+		KTextField search = new KTextField(16);
+		search.setHint("Въведете поне 3 символа");
+		search.setMargin(new Insets(0, 20, 0, 20));
+		panel.add(search);
+
+		KButton books = new KButton(" книги");
+		panel.add(books);
+
+		KButton authors = new KButton(" автори");
+		panel.add(authors);
 	}
 
 }
