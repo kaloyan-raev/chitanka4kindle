@@ -93,12 +93,14 @@ public class OpdsPage {
 		}
 	}
 
-	private void parseNextPage() throws IOException {
+	private boolean parseNextPage() throws IOException {
 		SyndLink nextLink = getNextLink(currentPage);
 		if (nextLink != null) {
 			currentPage = parse(Utils.getUrlFromLinkAsString(nextLink.getHref()));
 			entries.addAll(currentPage.getEntries());
+			return true;
 		}
+		return false;
 	}
 	
 	private SyndFeed parsePage(int pageNumber) throws IOException {
@@ -135,9 +137,7 @@ public class OpdsPage {
 	}
 
 	public OpdsItem[] getItems(int index, int length) throws IOException {
-		while (entries.size() < index + length) {
-			parseNextPage();
-		}
+		while (entries.size() < index + length && parseNextPage());
 
 		OpdsItem[] items = new OpdsItem[Math
 				.min(length, entries.size() - index)];
