@@ -134,7 +134,7 @@ public abstract class Screen {
 		container.add(pager, c);
 	}
 
-	private int getCurrentPageIndex() {
+	private int getCurrentPage() {
 		return pageIndex / getPageSize() + 1;
 	}
 
@@ -214,7 +214,7 @@ public abstract class Screen {
 
 			setFocusOnFirst(content);
 
-			pager.setPage(getCurrentPageIndex());
+			pager.setPage(getCurrentPage());
 		} catch (IOException e) {
 			throw e;
 		} catch (Throwable t) {
