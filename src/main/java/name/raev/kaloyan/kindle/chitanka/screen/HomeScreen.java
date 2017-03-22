@@ -97,16 +97,13 @@ public class HomeScreen extends Screen {
 		KBorderedPanel panel = new KBorderedPanel();
 		container.add(panel, c);
 
-		KTextField search = new KTextField(16);
-		search.setHint("Въведете поне 3 символа");
-		search.setMargin(new Insets(0, 20, 0, 20));
-		panel.add(search);
+		KTextField text = new KTextField(16);
+		text.setHint("Въведете поне 3 символа");
+		text.setMargin(new Insets(0, 20, 0, 20));
+		panel.add(text);
 
-		KButton books = new KButton(" книги");
-		panel.add(books);
-
-		KButton authors = new KButton(" автори");
-		panel.add(authors);
+		KButton button = new KButton(" в библиотеката");
+		panel.add(button);
 	}
 
 }
