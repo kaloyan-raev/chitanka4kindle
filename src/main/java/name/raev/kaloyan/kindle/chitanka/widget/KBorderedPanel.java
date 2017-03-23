@@ -23,6 +23,13 @@ import java.awt.Rectangle;
 
 import com.amazon.kindle.kindlet.ui.KPanel;
 
+/**
+ * A panel with border.
+ * 
+ * <p>
+ * The border is a rounded rectangle, 2 pixels thick.
+ * </p>
+ */
 public class KBorderedPanel extends KPanel {
 
 	private static final long serialVersionUID = 8840237893389861608L;

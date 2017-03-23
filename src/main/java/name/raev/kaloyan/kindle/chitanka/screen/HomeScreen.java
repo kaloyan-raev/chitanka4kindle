@@ -21,21 +21,14 @@ package name.raev.kaloyan.kindle.chitanka.screen;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.Image;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
-import com.amazon.kindle.kindlet.ui.KButton;
 import com.amazon.kindle.kindlet.ui.KImage;
-import com.amazon.kindle.kindlet.ui.KOptionPane;
-import com.amazon.kindle.kindlet.ui.KOptionPane.MessageDialogListener;
-import com.amazon.kindle.kindlet.ui.KTextField;
 
 import name.raev.kaloyan.kindle.chitanka.OpdsItem;
 import name.raev.kaloyan.kindle.chitanka.Utils;
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
-import name.raev.kaloyan.kindle.chitanka.widget.KBorderedPanel;
+import name.raev.kaloyan.kindle.chitanka.widget.KSearchField;
 
 public class HomeScreen extends Screen {
 
@@ -98,29 +91,8 @@ public class HomeScreen extends Screen {
 		c.weightx = 1.0;
 		c.weighty = 1.0;
 
-		KBorderedPanel panel = new KBorderedPanel();
-		container.add(panel, c);
-
-		final KTextField text = new KTextField(16);
-		text.setHint("Въведете поне 3 символа");
-		text.setMargin(new Insets(0, 20, 0, 20));
-		panel.add(text);
-
-		KButton button = new KButton(" в библиотеката");
-		panel.add(button);
-
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (text.getText().trim().length() < 3) {
-					KOptionPane.showMessageDialog(null, "Въведете поне 3 символа.", "Търсене",
-							new MessageDialogListener() {
-								public void onClose() {
-									text.requestFocus();
-								}
-							});
-				}
-			}
-		});
+		KSearchField search = new KSearchField();
+		container.add(search, c);
 	}
 
 }
