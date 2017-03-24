@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Kaloyan Raev
+ * Copyright 2014-2017 Kaloyan Raev
  * 
  * This file is part of chitanka4kindle.
  * 
@@ -25,17 +25,16 @@ public class ScreenManager {
 
 	private static Screen currentScreen;
 
-	public static Screen createScreen(String opdsUrl) {
+	public static Screen createScreen(String url) {
 		try {
-			URL url = new URL(opdsUrl);
-			String path = url.getPath();
+			String path = new URL(url).getPath();
 
 			if ("/catalog.opds".equals(path)) {
-				return new HomeScreen(opdsUrl);
+				return new HomeScreen(url);
 			} else if ("/authors.opds".equals(path)
 					|| "/translators.opds".equals(path)
 					|| "/books.opds".equals(path) || "/texts.opds".equals(path)) {
-				return new ShortListScreen(opdsUrl);
+				return new ShortListScreen(url);
 			} else if ("/authors/first-name.opds".equals(path)
 					|| "/authors/last-name.opds".equals(path)
 					|| "/translators/first-name.opds".equals(path)
@@ -44,7 +43,7 @@ public class ScreenManager {
 					|| "/texts/alpha.opds".equals(path)
 					|| "/series.opds".equals(path)
 					|| "/sequences.opds".equals(path)) {
-				return new AlphaScreen(opdsUrl);
+				return new AlphaScreen(url);
 			} else if ("/books/category.opds".equals(path)
 					|| "/texts/label.opds".equals(path)
 					|| "/texts/type.opds".equals(path)
@@ -53,14 +52,16 @@ public class ScreenManager {
 					|| path.indexOf("/last-name/") != -1
 					|| path.indexOf("/series/alpha/") != -1
 					|| path.indexOf("/sequences/alpha/") != -1) {
-				return new LongListScreen(opdsUrl);
+				return new LongListScreen(url);
+			} else if (path.indexOf("/search.xml") != -1) {
+				return new SearchScreen(url);
 			}
 		} catch (MalformedURLException e) {
 			// return the default screen
 		}
 
 		// default screen
-		return new BookListScreen(opdsUrl);
+		return new BookListScreen(url);
 	}
 
 	public static void setCurrentScreen(Screen screen) {

@@ -29,6 +29,8 @@ import com.amazon.kindle.kindlet.ui.KOptionPane;
 import com.amazon.kindle.kindlet.ui.KOptionPane.MessageDialogListener;
 import com.amazon.kindle.kindlet.ui.KTextField;
 
+import name.raev.kaloyan.kindle.chitanka.ConnectivityManager;
+
 /**
  * A search field widget.
  * 
@@ -43,6 +45,8 @@ import com.amazon.kindle.kindlet.ui.KTextField;
 public class KSearchField extends KBorderedPanel {
 
 	private static final long serialVersionUID = 5995745417624143763L;
+
+	private static final String SEARCH_URL_PREFIX = "https://chitanka.info/search.xml?q=";
 
 	private KTextField text;
 	private KButton button;
@@ -71,7 +75,10 @@ public class KSearchField extends KBorderedPanel {
 	}
 
 	private void doSearch() {
-		if (text.getText().trim().length() < 3) {
+		if (text.getText().trim().length() >= 3) {
+			String url = SEARCH_URL_PREFIX + text.getText().trim();
+			ConnectivityManager.getInstance().display(url);
+		} else {
 			KOptionPane.showMessageDialog(null, "Въведете поне 3 символа.", "Търсене", new MessageDialogListener() {
 				public void onClose() {
 					text.requestFocus();
