@@ -52,7 +52,7 @@
 
 Тази стъпка позволява инсталирането на софтуер, който не е разработен от производителя на устройството. Отключването е абсолютно необходимо за успешното изпълнение на инсталационния пакет на приложението.
 
-- [Инструкции за Kindle Keyboard (Kindle 3)](http://www.mobileread.com/forums/showthread.php?t=88004) (скоро ще бъдат преведни и на български език)
+- [Инструкции за Kindle Keyboard (Kindle 3)](https://hitrini.blogspot.bg/2017/03/jailbreak-kindle-3.html)
 - [Инструкции за Kindle 4 и 5](https://hitrini.blogspot.bg/2017/03/jailbreak-kindle-4-5.html)
 
 Инсталиране на приложението
