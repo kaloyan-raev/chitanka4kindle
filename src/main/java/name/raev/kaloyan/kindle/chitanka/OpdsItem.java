@@ -19,13 +19,14 @@
 package name.raev.kaloyan.kindle.chitanka;
 
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndLink;
+
+import name.raev.kaloyan.kindle.chitanka.screen.Screen;
 
 public class OpdsItem {
 
@@ -57,9 +58,9 @@ public class OpdsItem {
 				String href = imageLink.getHref();
 				href = replace(href, ".200.", ".65.");
 				URL url = Utils.getUrlFromLink(href);
-				return Toolkit.getDefaultToolkit().getImage(url);
+				return Utils.getImage(url);
 			} catch (IOException e) {
-				e.printStackTrace();
+				Screen.displayError(e);
 			}
 		}
 		return null;

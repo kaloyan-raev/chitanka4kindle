@@ -44,28 +44,25 @@ public class ConnectivityManager {
 	}
 
 	public void display(final String url) {
-		Connectivity connectivity = ContextManager.getContext()
-				.getConnectivity();
-		connectivity.submitSingleAttemptConnectivityRequest(
-				new ConnectivityHandler() {
-					public void disabled(NetworkDisabledDetails details)
-							throws InterruptedException {
-						handleNetworkError();
-						display(url);
-					}
+		Connectivity connectivity = ContextManager.getContext().getConnectivity();
+		connectivity.submitSingleAttemptConnectivityRequest(new ConnectivityHandler() {
+			public void disabled(NetworkDisabledDetails details) throws InterruptedException {
+				handleNetworkError();
+				display(url);
+			}
 
-					public void connected() throws InterruptedException {
-						Screen screen = ScreenManager.createScreen(url);
-						try {
-							screen.display();
-						} catch (IOException e) {
-							handleNetworkError();
-							display(url);
-						}
+			public void connected() throws InterruptedException {
+				Screen screen = ScreenManager.createScreen(url);
+				try {
+					screen.display();
+				} catch (IOException e) {
+					handleNetworkError();
+					display(url);
+				}
 
-						ScreenManager.setCurrentScreen(screen);
-					}
-				}, true);
+				ScreenManager.setCurrentScreen(screen);
+			}
+		}, true);
 	}
 
 	public void downloadBook(final String href) {

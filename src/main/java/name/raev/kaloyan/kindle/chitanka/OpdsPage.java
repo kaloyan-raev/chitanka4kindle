@@ -19,7 +19,6 @@
 package name.raev.kaloyan.kindle.chitanka;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -53,15 +52,19 @@ public class OpdsPage {
 
 	public int getItemsCount() throws IOException {
 		if (itemsCount == Integer.MIN_VALUE) {
-			parsePagesCount();
-	
-			int firstPageEntries = firstPage.getEntries().size();
-			if (pagesCount == 1) {
-				itemsCount = firstPageEntries;
+			if (url == null) {
+				itemsCount = 1;
 			} else {
-				SyndFeed lastPage = parsePage(pagesCount);
-				itemsCount = firstPageEntries * (pagesCount - 1)
-						+ lastPage.getEntries().size();
+				parsePagesCount();
+				
+				int firstPageEntries = firstPage.getEntries().size();
+				if (pagesCount == 1) {
+					itemsCount = firstPageEntries;
+				} else {
+					SyndFeed lastPage = parsePage(pagesCount);
+					itemsCount = firstPageEntries * (pagesCount - 1)
+							+ lastPage.getEntries().size();
+				}
 			}
 		}
 		return itemsCount;
@@ -110,11 +113,8 @@ public class OpdsPage {
 
 	private SyndFeed parse(String address) throws IOException {
 		try {
-			URL feedUrl = new URL(address);
 			SyndFeedInput input = new SyndFeedInput();
-			return input.build(new XmlReader(feedUrl));
-		} catch (IOException e) {
-			throw e;
+			return input.build(new XmlReader(Utils.getInputStream(address)));
 		} catch (Exception e) {
 			throw new RuntimeException("Failed parsing: " + address, e);
 		}
