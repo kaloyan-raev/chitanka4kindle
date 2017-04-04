@@ -31,7 +31,7 @@ public class SplashScreen extends Screen {
 	}
 
 	protected int getPageSize() {
-		return 0;
+		return 1;
 	}
 
 	protected void createContent(Container container) throws IOException {

@@ -45,6 +45,16 @@ grant signedBy "Kindlet" {
 grant signedBy "KindletNetworkSupport" {
   // Network access by Kindlets must be controlled
   permission com.amazon.kindle.kindlet.internal.net.security.NetworkAccessPermission "createConnection";
+  
+  // Allow setting request headers - required for 3G connection
+  permission com.amazon.kindle.kindlet.internal.net.security.NetworkAccessPermission "accessRestrictedHeaders";
+  
+  // Allow setting HTTP proxy - required for 3G connection
+  permission java.util.PropertyPermission "http.proxyHost", "read,write";
+  permission java.util.PropertyPermission "http.proxyPort", "read,write";
+  
+  // Allow accessing the x-fsn cookie file - required for 3G connection
+  permission java.io.FilePermission "/var/local/java/prefs/cookies/Cookie__x-fsn_WITH_DOMAIN__$$cookie.store.domains.cookie", "read";
 };
 
 // Permissions needed by the Java framework &/or Kindlets that have a UI
@@ -89,5 +99,3 @@ grant codeBase "file:///opt/amazon/ebook/sdk/lib/-" {
 grant {
   permission java.io.FilePermission "/mnt/us/-", "read,write,execute";
 };
-                                                    
-  

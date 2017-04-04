@@ -46,6 +46,7 @@
 						</manifest>
 						<manifestEntries>
 							<Amazon-Cover-Image>logo.jpg</Amazon-Cover-Image>
+							<Network-Access-Grants>sponsored</Network-Access-Grants>
 						</manifestEntries>
 					</archive>
 				</configuration>
