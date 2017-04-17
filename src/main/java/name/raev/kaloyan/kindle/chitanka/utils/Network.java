@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2017 Kaloyan Raev
+ * Copyright 2017 Kaloyan Raev
  * 
  * This file is part of chitanka4kindle.
  * 
@@ -16,10 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with chitanka4kindle.  If not, see <http://www.gnu.org/licenses/>.
  */
-package name.raev.kaloyan.kindle.chitanka;
+package name.raev.kaloyan.kindle.chitanka.utils;
 
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,90 +30,36 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
-public class Utils {
+import name.raev.kaloyan.kindle.chitanka.ConnectivityManager;
+
+/**
+ * Networking utilities.
+ */
+public class Network {
 
 	/**
-	 * Forces rescan of the "documents" folder, so newly downloaded book appear
-	 * on the Kindle's home screen.
+	 * Returns an input stream for the given URL.
 	 * 
-	 * <p>
-	 * This method will fail with security exception with the default security
-	 * policy on Kindle. The following permission must be added to the
-	 * /opt/amazon/ebook/security/external.policy file inside the 'grant
-	 * signedBy "Kindlet" {' block:
-	 * </p>
-	 * 
-	 * <pre>
-	 * permission java.io.FilePermission "<<ALL FILES>>", "execute";
-	 * </pre>
-	 * 
-	 * <p>
-	 * Kindle must be restarted after modifying the policy file.
-	 * </p>
-	 * 
+	 * @param url
+	 *            the URL as <code>String</code> object
+	 * @return an <code>InputStream</code> object
 	 * @throws IOException
-	 * @throws InterruptedException
+	 *             if a malformed URL is given or a networking problem occurs
 	 */
-	public static void rescanDocuments() throws IOException,
-			InterruptedException {
-		Process p = Runtime
-				.getRuntime()
-				.exec("dbus-send --system /default com.lab126.powerd.resuming int32:1");
-		p.waitFor();
-	}
-
-	public static void downloadZippedBook(String href)
-			throws IOException {
-		URL url = new URL(href);
-		ZipInputStream in = new ZipInputStream(Utils.getInputStream(url));
-		ZipEntry entry = in.getNextEntry();
-		
-		downloadBook(in, entry.getName());
-	}
-
-	public static void downloadMobiFromEpubUrl(String href) throws IOException {
-		URL urlEpub = getUrlFromLink(href);
-		
-		String path = urlEpub.getFile();
-		path = path.substring(0, path.length() - 4).concat("mobi");
-		
-		URL urlMobi = new URL("http", "bb.bulexpo-bg.com", path);
-		InputStream in = Utils.getInputStream(urlMobi);
-		
-		String fileName = path.substring(path.lastIndexOf('/') + 1);
-
-		downloadBook(in, fileName);
-	}
-	
-	public static void downloadBook(InputStream in, String fileName) throws IOException {
-		readToFile(in, new File("/mnt/us/documents/", fileName));
-	}
-
-	public static Image loadBuiltinImage(String fileName) {
-		URL url = Utils.class.getClassLoader().getResource(fileName);
-		return Toolkit.getDefaultToolkit().getImage(url);
-	}
-	
-	public static URL getUrlFromLink(String link) throws MalformedURLException {
-		return new URL(new URL(ConnectivityManager.BASE_URL), link);
-	}
-	
-	public static String getUrlFromLinkAsString(String link) {
-		try {
-			return getUrlFromLink(link).toString();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
 	public static InputStream getInputStream(String url) throws IOException {
 		return getInputStream(new URL(url));
 	}
 
+	/**
+	 * Returns an input stream for the given URL.
+	 * 
+	 * @param url
+	 *            the URL
+	 * @return an <code>InputStream</code> object
+	 * @throws IOException
+	 *             if a malformed URL is given or a networking problem occurs
+	 */
 	public static InputStream getInputStream(URL url) throws IOException {
 		System.setProperty("http.proxyHost", "fints-g7g.amazon.com");
 		System.setProperty("http.proxyPort", "80");
@@ -142,14 +86,19 @@ public class Utils {
 		return null;
 	}
 
-	public static Image getImage(URL url) throws IOException {
-		File homeDir = ContextManager.getContext().getHomeDirectory();
-		File file = new File(homeDir, url.getPath());
-		file.getParentFile().mkdirs();
-		if (!file.exists()) {
-			readToFile(getInputStream(url), file);
-		}
-		return Toolkit.getDefaultToolkit().getImage(file.getAbsolutePath());
+	/**
+	 * Reads the content of the resource with the given URL to a file.
+	 * 
+	 * @param url
+	 *            the URL of the resource to read
+	 * @param file
+	 *            the file to save the content to
+	 * @throws IOException
+	 *             if a malformed URL is given or a networking or file system
+	 *             problem occurs
+	 */
+	public static void readToFile(URL url, File file) throws IOException {
+		readToFile(getInputStream(url), file);
 	}
 
 	private static void readToFile(InputStream in, File file) throws IOException {
@@ -164,6 +113,36 @@ public class Utils {
 			in.close();
 			out.flush();
 			out.close();
+		}
+	}
+
+	/**
+	 * Returns a URL object from the given hyperlink.
+	 * 
+	 * @param url
+	 *            a hyperlink as <code>String</code> object
+	 * @return a <code>URL</code> object
+	 * @throws MalformedURLException
+	 *             if the URL cannot be created successfully
+	 */
+	public static URL getUrlFromLink(String link) throws MalformedURLException {
+		return new URL(new URL(ConnectivityManager.BASE_URL), link);
+	}
+
+	/**
+	 * Returns a URL as String object from the given hyperlink.
+	 * 
+	 * @param url
+	 *            a hyperlink as <code>String</code> object
+	 * @return a URL as <code>String</code> object, or <code>null</code> if the
+	 *         URL cannot be created successfully
+	 */
+	public static String getUrlFromLinkAsString(String link) {
+		try {
+			return getUrlFromLink(link).toString();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 

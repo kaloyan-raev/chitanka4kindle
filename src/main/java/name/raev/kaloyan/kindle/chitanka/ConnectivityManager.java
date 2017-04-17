@@ -27,6 +27,8 @@ import com.amazon.kindle.kindlet.net.NetworkDisabledDetails;
 
 import name.raev.kaloyan.kindle.chitanka.screen.Screen;
 import name.raev.kaloyan.kindle.chitanka.screen.ScreenManager;
+import name.raev.kaloyan.kindle.chitanka.utils.BookDownloader;
+import name.raev.kaloyan.kindle.chitanka.utils.Network;
 import name.raev.kaloyan.kindle.chitanka.utils.ProgressIndicator;
 
 public class ConnectivityManager {
@@ -77,8 +79,8 @@ public class ConnectivityManager {
 
 			public void connected() throws InterruptedException {
 				try {
-					Utils.downloadMobiFromEpubUrl(href);
-					Utils.rescanDocuments();
+					BookDownloader.downloadMobiFromEpubUrl(href);
+					BookDownloader.rescanDocuments();
 				} catch (IOException e) {
 					handleNetworkError();
 					downloadBook(href);
@@ -109,7 +111,7 @@ public class ConnectivityManager {
 		// push the current page to history
 		history.push(ScreenManager.getCurrentScreen().getUrl());
 		// navigate to the selected page
-		display(Utils.getUrlFromLinkAsString(link));
+		display(Network.getUrlFromLinkAsString(link));
 	}
 	
 	public void handleNetworkError() throws InterruptedException {
