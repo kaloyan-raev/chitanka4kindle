@@ -38,7 +38,7 @@ import name.raev.kaloyan.kindle.chitanka.ConnectivityManager;
 import name.raev.kaloyan.kindle.chitanka.ContextManager;
 import name.raev.kaloyan.kindle.chitanka.DialogManager;
 import name.raev.kaloyan.kindle.chitanka.OpdsPage;
-import name.raev.kaloyan.kindle.chitanka.Utils;
+import name.raev.kaloyan.kindle.chitanka.utils.ProgressIndicator;
 import name.raev.kaloyan.kindle.chitanka.widget.KPager;
 
 public abstract class Screen {
@@ -76,7 +76,7 @@ public abstract class Screen {
 	protected abstract int getPageSize();
 
 	public void display() throws IOException {
-		Utils.startProgressIndicator();
+		ProgressIndicator.start();
 		
 		Container container = ContextManager.getContext().getRootContainer();
 
@@ -103,7 +103,7 @@ public abstract class Screen {
 		} catch (Throwable t) {
 			displayError(t);
 		} finally {
-			Utils.stopProgressIndicator();
+			ProgressIndicator.stop();
 		}
 		container.repaint();
 	}
@@ -147,7 +147,7 @@ public abstract class Screen {
 			return;
 		}
 
-		Utils.startProgressIndicator();
+		ProgressIndicator.start();
 		try {
 			int count = opdsPage.getItemsCount();
 			if (count - pageIndex > getPageSize()) {
@@ -157,7 +157,7 @@ public abstract class Screen {
 		} catch (IOException e) {
 			updatePage();
 		} finally {
-			Utils.stopProgressIndicator();
+			ProgressIndicator.stop();
 		}
 	}
 
@@ -177,7 +177,7 @@ public abstract class Screen {
 	}
 
 	private void updatePage() {
-		Utils.startProgressIndicator();
+		ProgressIndicator.start();
 		Connectivity connectivity = ContextManager.getContext().getConnectivity();
 		connectivity.submitSingleAttemptConnectivityRequest(new ConnectivityHandler() {
 			public void disabled(NetworkDisabledDetails details) throws InterruptedException {
