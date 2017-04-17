@@ -53,13 +53,20 @@ public class ImageLoader {
 	 *             if a malformed URL is given or a networking problem occurs
 	 */
 	public static Image getImage(URL url) throws IOException {
-		File homeDir = ContextManager.getContext().getHomeDirectory();
-		File file = new File(homeDir, url.getPath());
-		file.getParentFile().mkdirs();
-		if (!file.exists()) {
-			Network.readToFile(url, file);
+		if (KindleModel.getModel().hasUnrestricted3G()) {
+			// download the image via 3G-capable connection
+			File homeDir = ContextManager.getContext().getHomeDirectory();
+			File file = new File(homeDir, url.getPath());
+			file.getParentFile().mkdirs();
+			if (!file.exists()) {
+				Network.readToFile(url, file);
+			}
+			// now create the AWT Image object
+			return Toolkit.getDefaultToolkit().getImage(file.getAbsolutePath());
+		} else {
+			// no 3G - create the AWT Image directly from URL
+			return Toolkit.getDefaultToolkit().getImage(url);
 		}
-		return Toolkit.getDefaultToolkit().getImage(file.getAbsolutePath());
 	}
 
 }

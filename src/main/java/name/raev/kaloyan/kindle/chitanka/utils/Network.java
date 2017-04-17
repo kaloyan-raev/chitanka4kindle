@@ -61,18 +61,24 @@ public class Network {
 	 *             if a malformed URL is given or a networking problem occurs
 	 */
 	public static InputStream getInputStream(URL url) throws IOException {
-		System.setProperty("http.proxyHost", "fints-g7g.amazon.com");
-		System.setProperty("http.proxyPort", "80");
-		URLConnection conn = url.openConnection();
-		conn.setRequestProperty("x-fsn", getXFSN());
-		conn.setRequestProperty("User-Agent",
-				"Mozilla/5.0 (Linux; U; en-US) AppleWebKit/528.5+ (KHTML, like Gecko, Safari/528.5+) Version/4.0 Kindle/3.0 (screen 600x800; rotate)");
-		conn.setRequestProperty("Accept",
-				"application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5");
-		conn.setRequestProperty("Accept-Encoding", "gzip");
-		conn.setRequestProperty("x-kn-appId", "BBookletV3");
-		InputStream in = conn.getInputStream();
-		return (url.getPath().indexOf("opds") == -1) ? in : new GZIPInputStream(in);
+		if (KindleModel.getModel().hasUnrestricted3G()) {
+			// prepare a 3G-capable connection
+			System.setProperty("http.proxyHost", "fints-g7g.amazon.com");
+			System.setProperty("http.proxyPort", "80");
+			URLConnection conn = url.openConnection();
+			conn.setRequestProperty("x-fsn", getXFSN());
+			conn.setRequestProperty("User-Agent",
+					"Mozilla/5.0 (Linux; U; en-US) AppleWebKit/528.5+ (KHTML, like Gecko, Safari/528.5+) Version/4.0 Kindle/3.0 (screen 600x800; rotate)");
+			conn.setRequestProperty("Accept",
+					"application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5");
+			conn.setRequestProperty("Accept-Encoding", "gzip");
+			conn.setRequestProperty("x-kn-appId", "BBookletV3");
+			InputStream in = conn.getInputStream();
+			return (url.getPath().indexOf("opds") == -1) ? in : new GZIPInputStream(in);
+		} else {
+			// no 3G - open the stream directly to the URL
+			return url.openStream();
+		}
 	}
 
 	private static String getXFSN() throws IOException {
