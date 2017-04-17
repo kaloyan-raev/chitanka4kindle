@@ -27,6 +27,9 @@ import com.amazon.kindle.kindlet.net.NetworkDisabledDetails;
 
 import name.raev.kaloyan.kindle.chitanka.screen.Screen;
 import name.raev.kaloyan.kindle.chitanka.screen.ScreenManager;
+import name.raev.kaloyan.kindle.chitanka.utils.BookDownloader;
+import name.raev.kaloyan.kindle.chitanka.utils.Network;
+import name.raev.kaloyan.kindle.chitanka.utils.ProgressIndicator;
 
 public class ConnectivityManager {
 	
@@ -66,7 +69,7 @@ public class ConnectivityManager {
 	}
 
 	public void downloadBook(final String href) {
-		Utils.startProgressIndicator("Книгата се изтегля");
+		ProgressIndicator.start("Книгата се изтегля");
 		Connectivity connectivity = ContextManager.getContext().getConnectivity();
 		connectivity.submitSingleAttemptConnectivityRequest(new ConnectivityHandler() {
 			public void disabled(NetworkDisabledDetails details) throws InterruptedException {
@@ -76,14 +79,14 @@ public class ConnectivityManager {
 
 			public void connected() throws InterruptedException {
 				try {
-					Utils.downloadMobiFromEpubUrl(href);
-					Utils.rescanDocuments();
+					BookDownloader.downloadMobiFromEpubUrl(href);
+					BookDownloader.rescanDocuments();
 				} catch (IOException e) {
 					handleNetworkError();
 					downloadBook(href);
 					return;
 				} finally {
-					Utils.stopProgressIndicator();
+					ProgressIndicator.stop();
 				}
 
 				// show info message
@@ -108,11 +111,11 @@ public class ConnectivityManager {
 		// push the current page to history
 		history.push(ScreenManager.getCurrentScreen().getUrl());
 		// navigate to the selected page
-		display(Utils.getUrlFromLinkAsString(link));
+		display(Network.getUrlFromLinkAsString(link));
 	}
 	
 	public void handleNetworkError() throws InterruptedException {
-		Utils.stopProgressIndicator();
+		ProgressIndicator.stop();
 		String title = "Неуспешно свързване";
 		String message = "Приложението не може да се свърже с мрежата. Уверете се, че сте в обхвата на безжична мрежа.\n\nЗатворете това съобщение, за да опитате отново.";
 		DialogManager.displayDialog(message, title);

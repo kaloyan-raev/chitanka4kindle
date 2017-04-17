@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Kaloyan Raev
+ * Copyright 2014-2017 Kaloyan Raev
  * 
  * This file is part of chitanka4kindle.
  * 
@@ -27,6 +27,8 @@ import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndLink;
 
 import name.raev.kaloyan.kindle.chitanka.screen.Screen;
+import name.raev.kaloyan.kindle.chitanka.utils.ImageLoader;
+import name.raev.kaloyan.kindle.chitanka.utils.Network;
 
 public class OpdsItem {
 
@@ -57,8 +59,8 @@ public class OpdsItem {
 				SyndLink imageLink = (SyndLink) links.get(5);
 				String href = imageLink.getHref();
 				href = replace(href, ".200.", ".65.");
-				URL url = Utils.getUrlFromLink(href);
-				return Utils.getImage(url);
+				URL url = Network.getUrlFromLink(href);
+				return ImageLoader.getImage(url);
 			} catch (IOException e) {
 				Screen.displayError(e);
 			}

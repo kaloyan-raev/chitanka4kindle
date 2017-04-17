@@ -29,6 +29,8 @@ import com.sun.syndication.feed.synd.SyndLink;
 import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
 
+import name.raev.kaloyan.kindle.chitanka.utils.Network;
+
 public class OpdsPage {
 
 	private int itemsCount = Integer.MIN_VALUE;
@@ -99,7 +101,7 @@ public class OpdsPage {
 	private boolean parseNextPage() throws IOException {
 		SyndLink nextLink = getNextLink(currentPage);
 		if (nextLink != null) {
-			currentPage = parse(Utils.getUrlFromLinkAsString(nextLink.getHref()));
+			currentPage = parse(Network.getUrlFromLinkAsString(nextLink.getHref()));
 			entries.addAll(currentPage.getEntries());
 			return true;
 		}
@@ -114,7 +116,7 @@ public class OpdsPage {
 	private SyndFeed parse(String address) throws IOException {
 		try {
 			SyndFeedInput input = new SyndFeedInput();
-			return input.build(new XmlReader(Utils.getInputStream(address)));
+			return input.build(new XmlReader(Network.getInputStream(address)));
 		} catch (Exception e) {
 			throw new RuntimeException("Failed parsing: " + address, e);
 		}

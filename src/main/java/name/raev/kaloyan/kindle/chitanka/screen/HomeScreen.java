@@ -26,7 +26,7 @@ import java.io.IOException;
 import com.amazon.kindle.kindlet.ui.KImage;
 
 import name.raev.kaloyan.kindle.chitanka.OpdsItem;
-import name.raev.kaloyan.kindle.chitanka.Utils;
+import name.raev.kaloyan.kindle.chitanka.utils.ImageLoader;
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 import name.raev.kaloyan.kindle.chitanka.widget.KSearchField;
 
@@ -58,7 +58,7 @@ public class HomeScreen extends Screen {
 		c.weightx = 1.0;
 		c.weighty = 1.0;
 
-		Image img = Utils.loadBuiltinImage("logo.jpg");
+		Image img = ImageLoader.loadBuiltinImage("logo.jpg");
 		KImage image = new KImage(img, 688 / 2, 720 / 2);
 		container.add(image, c);
 	}
