@@ -58,7 +58,7 @@ public class KindleModel {
 	 *         support, <code>false</code> otherwise
 	 */
 	public boolean hasUnrestricted3G() {
-		return snPrefix == "B006" || snPrefix == "B00A";
+		return "B006".equals(snPrefix) || "B00A".equals(snPrefix);
 	}
 
 }
