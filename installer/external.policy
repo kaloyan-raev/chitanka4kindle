@@ -55,6 +55,9 @@ grant signedBy "KindletNetworkSupport" {
   
   // Allow accessing the x-fsn cookie file - required for 3G connection
   permission java.io.FilePermission "/var/local/java/prefs/cookies/Cookie__x-fsn_WITH_DOMAIN__$$cookie.store.domains.cookie", "read";
+  
+  // Allow reading the device serial number - required to determine if the model supports 3G
+  permission java.io.FilePermission "/proc/usid", "read";
 };
 
 // Permissions needed by the Java framework &/or Kindlets that have a UI
