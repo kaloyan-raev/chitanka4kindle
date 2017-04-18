@@ -32,6 +32,8 @@ import name.raev.kaloyan.kindle.chitanka.widget.KSearchField;
 
 public class HomeScreen extends Screen {
 
+	private KSearchField search;
+
 	HomeScreen(String opdsUrl) {
 		super(opdsUrl);
 	}
@@ -48,6 +50,11 @@ public class HomeScreen extends Screen {
 
 	protected void updateContent(Container container) {
 		// nothing to update
+	}
+
+	protected boolean resetFocus(Container container) {
+		search.requestFocus();
+		return true;
 	}
 
 	private void addLogo(Container container) {
@@ -91,7 +98,7 @@ public class HomeScreen extends Screen {
 		c.weightx = 1.0;
 		c.weighty = 1.0;
 
-		KSearchField search = new KSearchField();
+		search = new KSearchField();
 		container.add(search, c);
 	}
 

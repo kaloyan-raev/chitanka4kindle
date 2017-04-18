@@ -93,9 +93,8 @@ public abstract class Screen {
 			// call the subclass to create the main content of the page
 			createContent(content);
 
-			// set the focus on the first focusable widget in the created
-			// content
-			setFocusOnFirst(content);
+			// reset keyboard focus
+			resetFocus(content);
 
 			createPager(container);
 		} catch (IOException e) {
@@ -212,7 +211,7 @@ public abstract class Screen {
 				createPager(container);
 			}
 
-			setFocusOnFirst(content);
+			resetFocus(content);
 
 			pager.setPage(getCurrentPage());
 		} catch (IOException e) {
@@ -228,7 +227,10 @@ public abstract class Screen {
 		return opdsPage.getUrl();
 	}
 
-	protected boolean setFocusOnFirst(Container container) {
+	/**
+	 * The default implementation sets the focus to the first focusable widget.
+	 */
+	protected boolean resetFocus(Container container) {
 		Component[] components = container.getComponents();
 		
 		for (int i = 0; i < components.length; i++) {
@@ -237,7 +239,7 @@ public abstract class Screen {
 			// check children recursively
 			if (component instanceof Container) {
 				Container c = (Container) component;
-				if (setFocusOnFirst(c))
+				if (resetFocus(c))
 					return true;
 			}
 			

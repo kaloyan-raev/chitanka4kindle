@@ -46,7 +46,7 @@ public class KSearchField extends KBorderedPanel {
 
 	private static final long serialVersionUID = 5995745417624143763L;
 
-	private static final String SEARCH_URL_PREFIX = "https://chitanka.info/search.xml?q=";
+	private static final String SEARCH_URL_PREFIX = "http://chitanka.info/search.xml?q=";
 
 	private KTextField text;
 	private KButton button;
@@ -72,6 +72,10 @@ public class KSearchField extends KBorderedPanel {
 				doSearch();
 			}
 		});
+	}
+
+	public void requestFocus() {
+		text.requestFocus();
 	}
 
 	private void doSearch() {
