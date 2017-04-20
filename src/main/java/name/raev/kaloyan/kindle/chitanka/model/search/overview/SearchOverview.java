@@ -18,21 +18,14 @@
  */
 package name.raev.kaloyan.kindle.chitanka.model.search.overview;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.Stack;
 
 import org.json.simple.parser.ContentHandler;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import name.raev.kaloyan.kindle.chitanka.utils.Network;
+import name.raev.kaloyan.kindle.chitanka.model.search.SearchParser;
 
-public class SearchOverview {
-
-	private Stack objects = new Stack();
+public class SearchOverview extends SearchParser {
 
 	private String query = null;
 	private int persons = 0;
@@ -42,7 +35,7 @@ public class SearchOverview {
 	private int categories = 0;
 
 	public SearchOverview(String url) throws IOException, ParseException {
-		parse(url);
+		super(url);
 	}
 
 	public String getQuery() {
@@ -73,11 +66,9 @@ public class SearchOverview {
 		return categories;
 	}
 
-	private void parse(String url) throws IOException, ParseException {
-		Reader reader = new BufferedReader(new InputStreamReader(Network.getInputStream(url)));
-
-		new JSONParser().parse(reader, new ContentHandler() {
-
+	protected ContentHandler getContentHandler() {
+		return new ContentHandler() {
+			
 			public void startJSON() throws ParseException, IOException {
 			}
 
@@ -134,6 +125,6 @@ public class SearchOverview {
 				}
 				return true;
 			}
-		});
+		};
 	}
 }

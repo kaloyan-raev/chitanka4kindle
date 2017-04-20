@@ -18,38 +18,29 @@
  */
 package name.raev.kaloyan.kindle.chitanka.model.search.person;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 import org.json.simple.parser.ContentHandler;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import name.raev.kaloyan.kindle.chitanka.utils.Network;
+import name.raev.kaloyan.kindle.chitanka.model.search.SearchParser;
 
-public class SearchPersons {
-
-	private Stack objects = new Stack();
+public class SearchPersons extends SearchParser {
 
 	private List persons = new ArrayList();
 
 	public SearchPersons(String url) throws IOException, ParseException {
-		parse(url);
+		super(url);
 	}
 
 	public Person[] getPersons() {
 		return (Person[]) persons.toArray(new Person[persons.size()]);
 	}
 
-	private void parse(String url) throws IOException, ParseException {
-		Reader reader = new BufferedReader(new InputStreamReader(Network.getInputStream(url)));
-
-		new JSONParser().parse(reader, new ContentHandler() {
+	protected ContentHandler getContentHandler() {
+		return new ContentHandler() {
 
 			public void startJSON() throws ParseException, IOException {
 			}
@@ -109,6 +100,6 @@ public class SearchPersons {
 				}
 				return true;
 			}
-		});
+		};
 	}
 }
