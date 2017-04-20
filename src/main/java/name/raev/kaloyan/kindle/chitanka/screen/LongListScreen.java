@@ -54,6 +54,14 @@ public class LongListScreen extends Screen {
 		title.setFont(FONT_PAGE_TITLE);
 		container.add(title, c);
 
+		// add subtitle
+		String subtitle = page.getSubtitle();
+		if (subtitle != null) {
+			KLabel total = new KLabel(subtitle);
+			total.setFont(FONT_PAGE_SUBTITLE);
+			container.add(total, c);
+		}
+
 		// add item links
 		Item[] items = page.getItems(pageIndex, getPageSize());
 		for (int i = 0; i < items.length; i++) {
