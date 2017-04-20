@@ -16,27 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with chitanka4kindle.  If not, see <http://www.gnu.org/licenses/>.
  */
-package name.raev.kaloyan.kindle.chitanka.model.search;
+package name.raev.kaloyan.kindle.chitanka.model.search.sequence;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+public class Sequence {
 
-import org.json.simple.parser.ContentHandler;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+	private String slug;
+	private String name;
+	private int nrOfBooks;
 
-import name.raev.kaloyan.kindle.chitanka.utils.Network;
+	public String getSlug() {
+		return slug;
+	}
 
-public abstract class SearchParser {
-	
-	protected abstract ContentHandler getContentHandler();
+	public void setSlug(String slug) {
+		this.slug = slug;
+	}
 
-	protected void parse(String url) throws IOException, ParseException {
-		Reader reader = new BufferedReader(new InputStreamReader(Network.getInputStream(url)));
+	public String getName() {
+		return name;
+	}
 
-		new JSONParser().parse(reader, getContentHandler());
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getNumberOfBooks() {
+		return nrOfBooks;
+	}
+
+	public void setNumberOfBooks(int nrOfBooks) {
+		this.nrOfBooks = nrOfBooks;
 	}
 
 }

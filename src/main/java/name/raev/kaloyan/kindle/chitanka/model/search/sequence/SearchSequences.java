@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with chitanka4kindle.  If not, see <http://www.gnu.org/licenses/>.
  */
-package name.raev.kaloyan.kindle.chitanka.model.search.category;
+package name.raev.kaloyan.kindle.chitanka.model.search.sequence;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,30 +28,30 @@ import org.json.simple.parser.ParseException;
 import name.raev.kaloyan.kindle.chitanka.model.search.BaseContentHandler;
 import name.raev.kaloyan.kindle.chitanka.model.search.SearchParser;
 
-public class SearchCategories extends SearchParser {
+public class SearchSequences extends SearchParser {
 
-	private static final String CATEGORIES_KEY = "categories";
+	private static final String SEQUENCES_KEY = "sequences";
 
-	private List categories = new ArrayList();
+	private List sequences = new ArrayList();
 
-	public SearchCategories(String url) throws IOException, ParseException {
+	public SearchSequences(String url) throws IOException, ParseException {
 		parse(url);
 	}
 
-	public Category[] getCategories() {
-		return (Category[]) categories.toArray(new Category[categories.size()]);
+	public Sequence[] getSequences() {
+		return (Sequence[]) sequences.toArray(new Sequence[sequences.size()]);
 	}
 
 	protected ContentHandler getContentHandler() {
 		return new BaseContentHandler() {
 
 			public boolean endArray() throws ParseException, IOException {
-				return !CATEGORIES_KEY.equals(getParentKey());
+				return !SEQUENCES_KEY.equals(getParentKey());
 			}
 
 			public boolean startObject() throws ParseException, IOException {
-				if (CATEGORIES_KEY.equals(getParentKey())) {
-					categories.add(new Category());
+				if (SEQUENCES_KEY.equals(getParentKey())) {
+					sequences.add(new Sequence());
 				}
 				return true;
 			}
@@ -59,15 +59,15 @@ public class SearchCategories extends SearchParser {
 			public boolean primitive(Object value) throws ParseException, IOException {
 				String key = (String) objects.peek();
 				if ("slug".equals(key)) {
-					if (CATEGORIES_KEY.equals(getParentKey(2))) {
+					if (SEQUENCES_KEY.equals(getParentKey(2))) {
 						getLast().setSlug((String) value);
 					}
 				} else if ("name".equals(key)) {
-					if (CATEGORIES_KEY.equals(getParentKey(2))) {
+					if (SEQUENCES_KEY.equals(getParentKey(2))) {
 						getLast().setName((String) value);
 					}
 				} else if ("nrOfBooks".equals(key)) {
-					if (CATEGORIES_KEY.equals(getParentKey(2))) {
+					if (SEQUENCES_KEY.equals(getParentKey(2))) {
 						getLast().setNumberOfBooks(((Long) value).intValue());
 					}
 				}
@@ -76,7 +76,7 @@ public class SearchCategories extends SearchParser {
 		};
 	}
 
-	private Category getLast() {
-		return (Category) categories.get(categories.size() - 1);
+	private Sequence getLast() {
+		return (Sequence) sequences.get(sequences.size() - 1);
 	}
 }

@@ -35,7 +35,7 @@ public class SearchPersons extends SearchParser {
 	private List persons = new ArrayList();
 
 	public SearchPersons(String url) throws IOException, ParseException {
-		super(url);
+		parse(url);
 	}
 
 	public Person[] getPersons() {

@@ -25,6 +25,7 @@ import name.raev.kaloyan.kindle.chitanka.model.opds.OpdsPage;
 import name.raev.kaloyan.kindle.chitanka.model.search.category.SearchCategoriesPage;
 import name.raev.kaloyan.kindle.chitanka.model.search.overview.SearchOverviewPage;
 import name.raev.kaloyan.kindle.chitanka.model.search.person.SearchPersonsPage;
+import name.raev.kaloyan.kindle.chitanka.model.search.sequence.SearchSequencesPage;
 
 public class ScreenManager {
 
@@ -65,6 +66,8 @@ public class ScreenManager {
 					return new LongListScreen(new SearchPersonsPage(url));
 				} else if (query.endsWith("&filter=categories")) {
 					return new LongListScreen(new SearchCategoriesPage(url));
+				} else if (query.endsWith("&filter=sequences")) {
+					return new LongListScreen(new SearchSequencesPage(url));
 				} else {
 					return new ShortListScreen(new SearchOverviewPage(url));
 				}

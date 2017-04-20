@@ -36,7 +36,7 @@ public class SearchOverview extends SearchParser {
 	private int categories = 0;
 
 	public SearchOverview(String url) throws IOException, ParseException {
-		super(url);
+		parse(url);
 	}
 
 	public String getQuery() {
@@ -69,13 +69,13 @@ public class SearchOverview extends SearchParser {
 
 	protected ContentHandler getContentHandler() {
 		return new BaseContentHandler() {
-			
+
 			public boolean primitive(Object value) throws ParseException, IOException {
 				String key = (String) objects.peek();
 				if ("text".equals(key)) {
 					query = (String) value;
 				} else if ("id".equals(key)) {
-					String parentKey = getParentKey(2);
+					String parentKey = (String) objects.elementAt(objects.size() - 2);
 					if ("persons".equals(parentKey)) {
 						persons++;
 					}
