@@ -25,9 +25,12 @@ import java.util.List;
 import org.json.simple.parser.ContentHandler;
 import org.json.simple.parser.ParseException;
 
+import name.raev.kaloyan.kindle.chitanka.model.search.BaseContentHandler;
 import name.raev.kaloyan.kindle.chitanka.model.search.SearchParser;
 
 public class SearchPersons extends SearchParser {
+
+	private static final String PERSONS_KEY = "persons";
 
 	private List persons = new ArrayList();
 
@@ -40,66 +43,40 @@ public class SearchPersons extends SearchParser {
 	}
 
 	protected ContentHandler getContentHandler() {
-		return new ContentHandler() {
-
-			public void startJSON() throws ParseException, IOException {
-			}
-
-			public void endJSON() throws ParseException, IOException {
-			}
-
-			public boolean startArray() throws ParseException, IOException {
-				return true;
-			}
+		return new BaseContentHandler() {
 
 			public boolean endArray() throws ParseException, IOException {
-				return !"persons".equals(objects.peek());
+				return !PERSONS_KEY.equals(getParentKey());
 			}
 
 			public boolean startObject() throws ParseException, IOException {
-				if (!objects.isEmpty() && "persons".equals(objects.peek())) {
+				if (PERSONS_KEY.equals(getParentKey())) {
 					persons.add(new Person());
 				}
-				return true;
-			}
-
-			public boolean endObject() throws ParseException, IOException {
-				return true;
-			}
-
-			public boolean startObjectEntry(String key) throws ParseException, IOException {
-				objects.push(key);
-				return true;
-			}
-
-			public boolean endObjectEntry() throws ParseException, IOException {
-				objects.pop();
 				return true;
 			}
 
 			public boolean primitive(Object value) throws ParseException, IOException {
 				String key = (String) objects.peek();
 				if ("slug".equals(key)) {
-					String parentKey = (String) objects.elementAt(objects.size() - 2);
-					if ("persons".equals(parentKey)) {
-						Person last = (Person) persons.get(persons.size() - 1);
-						last.setSlug((String) value);
+					if (PERSONS_KEY.equals(getParentKey(2))) {
+						getLast().setSlug((String) value);
 					}
 				} else if ("name".equals(key)) {
-					String parentKey = (String) objects.elementAt(objects.size() - 2);
-					if ("persons".equals(parentKey)) {
-						Person last = (Person) persons.get(persons.size() - 1);
-						last.setName((String) value);
+					if (PERSONS_KEY.equals(getParentKey(2))) {
+						getLast().setName((String) value);
 					}
 				} else if ("isAuthor".equals(key)) {
-					String parentKey = (String) objects.elementAt(objects.size() - 2);
-					if ("persons".equals(parentKey)) {
-						Person last = (Person) persons.get(persons.size() - 1);
-						last.setAuthor(((Boolean) value).booleanValue());
+					if (PERSONS_KEY.equals(getParentKey(2))) {
+						getLast().setAuthor(((Boolean) value).booleanValue());
 					}
 				}
 				return true;
 			}
 		};
+	}
+
+	private Person getLast() {
+		return (Person) persons.get(persons.size() - 1);
 	}
 }

@@ -25,9 +25,12 @@ import java.util.List;
 import org.json.simple.parser.ContentHandler;
 import org.json.simple.parser.ParseException;
 
+import name.raev.kaloyan.kindle.chitanka.model.search.BaseContentHandler;
 import name.raev.kaloyan.kindle.chitanka.model.search.SearchParser;
 
 public class SearchCategories extends SearchParser {
+
+	private static final String CATEGORIES_KEY = "categories";
 
 	private List categories = new ArrayList();
 
@@ -40,66 +43,40 @@ public class SearchCategories extends SearchParser {
 	}
 
 	protected ContentHandler getContentHandler() {
-		return new ContentHandler() {
-
-			public void startJSON() throws ParseException, IOException {
-			}
-
-			public void endJSON() throws ParseException, IOException {
-			}
-
-			public boolean startArray() throws ParseException, IOException {
-				return true;
-			}
+		return new BaseContentHandler() {
 
 			public boolean endArray() throws ParseException, IOException {
-				return !"categories".equals(objects.peek());
+				return !CATEGORIES_KEY.equals(getParentKey());
 			}
 
 			public boolean startObject() throws ParseException, IOException {
-				if (!objects.isEmpty() && "categories".equals(objects.peek())) {
+				if (CATEGORIES_KEY.equals(getParentKey())) {
 					categories.add(new Category());
 				}
-				return true;
-			}
-
-			public boolean endObject() throws ParseException, IOException {
-				return true;
-			}
-
-			public boolean startObjectEntry(String key) throws ParseException, IOException {
-				objects.push(key);
-				return true;
-			}
-
-			public boolean endObjectEntry() throws ParseException, IOException {
-				objects.pop();
 				return true;
 			}
 
 			public boolean primitive(Object value) throws ParseException, IOException {
 				String key = (String) objects.peek();
 				if ("slug".equals(key)) {
-					String parentKey = (String) objects.elementAt(objects.size() - 2);
-					if ("categories".equals(parentKey)) {
-						Category last = (Category) categories.get(categories.size() - 1);
-						last.setSlug((String) value);
+					if (CATEGORIES_KEY.equals(getParentKey(2))) {
+						getLast().setSlug((String) value);
 					}
 				} else if ("name".equals(key)) {
-					String parentKey = (String) objects.elementAt(objects.size() - 2);
-					if ("categories".equals(parentKey)) {
-						Category last = (Category) categories.get(categories.size() - 1);
-						last.setName((String) value);
+					if (CATEGORIES_KEY.equals(getParentKey(2))) {
+						getLast().setName((String) value);
 					}
 				} else if ("nrOfBooks".equals(key)) {
-					String parentKey = (String) objects.elementAt(objects.size() - 2);
-					if ("categories".equals(parentKey)) {
-						Category last = (Category) categories.get(categories.size() - 1);
-						last.setNumberOfBooks(((Long) value).intValue());
+					if (CATEGORIES_KEY.equals(getParentKey(2))) {
+						getLast().setNumberOfBooks(((Long) value).intValue());
 					}
 				}
 				return true;
 			}
 		};
+	}
+
+	private Category getLast() {
+		return (Category) categories.get(categories.size() - 1);
 	}
 }

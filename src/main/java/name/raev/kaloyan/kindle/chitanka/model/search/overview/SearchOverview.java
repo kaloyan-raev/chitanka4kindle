@@ -23,6 +23,7 @@ import java.io.IOException;
 import org.json.simple.parser.ContentHandler;
 import org.json.simple.parser.ParseException;
 
+import name.raev.kaloyan.kindle.chitanka.model.search.BaseContentHandler;
 import name.raev.kaloyan.kindle.chitanka.model.search.SearchParser;
 
 public class SearchOverview extends SearchParser {
@@ -67,46 +68,14 @@ public class SearchOverview extends SearchParser {
 	}
 
 	protected ContentHandler getContentHandler() {
-		return new ContentHandler() {
+		return new BaseContentHandler() {
 			
-			public void startJSON() throws ParseException, IOException {
-			}
-
-			public void endJSON() throws ParseException, IOException {
-			}
-
-			public boolean startArray() throws ParseException, IOException {
-				return true;
-			}
-
-			public boolean endArray() throws ParseException, IOException {
-				return true;
-			}
-
-			public boolean startObject() throws ParseException, IOException {
-				return true;
-			}
-
-			public boolean endObject() throws ParseException, IOException {
-				return true;
-			}
-
-			public boolean startObjectEntry(String key) throws ParseException, IOException {
-				objects.push(key);
-				return true;
-			}
-
-			public boolean endObjectEntry() throws ParseException, IOException {
-				objects.pop();
-				return true;
-			}
-
 			public boolean primitive(Object value) throws ParseException, IOException {
 				String key = (String) objects.peek();
 				if ("text".equals(key)) {
 					query = (String) value;
 				} else if ("id".equals(key)) {
-					String parentKey = (String) objects.elementAt(objects.size() - 2);
+					String parentKey = getParentKey(2);
 					if ("persons".equals(parentKey)) {
 						persons++;
 					}

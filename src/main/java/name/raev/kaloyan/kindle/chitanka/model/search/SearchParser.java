@@ -22,7 +22,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.Stack;
 
 import org.json.simple.parser.ContentHandler;
 import org.json.simple.parser.JSONParser;
@@ -31,8 +30,6 @@ import org.json.simple.parser.ParseException;
 import name.raev.kaloyan.kindle.chitanka.utils.Network;
 
 public abstract class SearchParser {
-
-	protected Stack objects = new Stack();
 	
 	public SearchParser(String url) throws IOException, ParseException {
 		parse(url);
