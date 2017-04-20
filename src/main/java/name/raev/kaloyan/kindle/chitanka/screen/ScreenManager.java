@@ -53,7 +53,7 @@ public class ScreenManager {
 					|| path.indexOf("/series/alpha/") != -1
 					|| path.indexOf("/sequences/alpha/") != -1) {
 				return new LongListScreen(url);
-			} else if (path.indexOf("/search.xml") != -1) {
+			} else if (path.indexOf("/search.json") != -1) {
 				return new SearchScreen(url);
 			}
 		} catch (MalformedURLException e) {

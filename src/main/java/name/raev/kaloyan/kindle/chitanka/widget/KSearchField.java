@@ -46,13 +46,17 @@ public class KSearchField extends KBorderedPanel {
 
 	private static final long serialVersionUID = 5995745417624143763L;
 
-	private static final String SEARCH_URL_PREFIX = "http://chitanka.info/search.xml?q=";
+	private static final String SEARCH_LINK_PREFIX = "/search.json?q=";
 
 	private KTextField text;
 	private KButton button;
 
 	public KSearchField() {
-		text = new KTextField(16);
+		this(null);
+	}
+
+	public KSearchField(String initialText) {
+		text = new KTextField(initialText, 16);
 		text.setHint("Въведете поне 3 символа");
 		text.setMargin(new Insets(0, 20, 0, 20));
 		add(text);
@@ -80,8 +84,8 @@ public class KSearchField extends KBorderedPanel {
 
 	private void doSearch() {
 		if (text.getText().trim().length() >= 3) {
-			String url = SEARCH_URL_PREFIX + text.getText().trim();
-			ConnectivityManager.getInstance().display(url);
+			String url = SEARCH_LINK_PREFIX + text.getText().trim();
+			ConnectivityManager.getInstance().navigateTo(url);
 		} else {
 			KOptionPane.showMessageDialog(null, "Въведете поне 3 символа.", "Търсене", new MessageDialogListener() {
 				public void onClose() {

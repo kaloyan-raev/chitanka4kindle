@@ -137,7 +137,7 @@ public abstract class Screen {
 		return pageIndex / getPageSize() + 1;
 	}
 
-	private int getTotalPages() throws IOException {
+	protected int getTotalPages() throws IOException {
 		return (opdsPage.getItemsCount() - 1) / getPageSize() + 1;
 	}
 
