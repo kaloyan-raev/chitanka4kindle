@@ -35,7 +35,8 @@ public class SearchPersonsItem implements Item {
 	}
 
 	public String getNavigationLink() {
-		return "/author/" + person.getSlug() + ".opds";
+		String category = (person.isAuthor()) ? "author" : "translator";
+		return "/" + category + "/" + person.getSlug() + ".opds";
 	}
 
 	public String getDownloadLink() {

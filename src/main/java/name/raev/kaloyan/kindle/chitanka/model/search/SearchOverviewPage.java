@@ -55,7 +55,7 @@ public class SearchOverviewPage implements Page {
 					new SearchOverviewItem("Книги", getOverview().getBooks(), "/books/search.opds?q=" + getQuery()),
 					new SearchOverviewItem("Творби", getOverview().getTexts(),
 							"/search.json?q=" + getQuery() + "&filter=texts"),
-					new SearchOverviewItem("Автори", getOverview().getPersons(),
+					new SearchOverviewItem("Автори и преводачи", getOverview().getPersons(),
 							"/search.json?q=" + getQuery() + "&filter=persons"),
 					new SearchOverviewItem("Категории", getOverview().getCategories(),
 							"/search.json?q=" + getQuery() + "&filter=categories"),

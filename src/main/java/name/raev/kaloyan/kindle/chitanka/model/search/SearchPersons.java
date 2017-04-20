@@ -100,6 +100,12 @@ public class SearchPersons {
 						Person last = (Person) persons.get(persons.size() - 1);
 						last.setName((String) value);
 					}
+				} else if ("isAuthor".equals(key)) {
+					String parentKey = (String) objects.elementAt(objects.size() - 2);
+					if ("persons".equals(parentKey)) {
+						Person last = (Person) persons.get(persons.size() - 1);
+						last.setAuthor(((Boolean) value).booleanValue());
+					}
 				}
 				return true;
 			}

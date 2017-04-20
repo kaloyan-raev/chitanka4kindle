@@ -38,7 +38,7 @@ public class SearchPersonsPage implements Page {
 	}
 
 	public String getTitle() throws IOException {
-		return "Автори с „" + getQuery() + "“";
+		return "Автори и преводачи с „" + getQuery() + "“";
 	}
 
 	public String getSubtitle() throws IOException {

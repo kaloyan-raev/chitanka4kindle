@@ -22,6 +22,7 @@ public class Person {
 
 	private String slug;
 	private String name;
+	private boolean isAuthor;
 
 	public String getSlug() {
 		return slug;
@@ -37,6 +38,14 @@ public class Person {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isAuthor() {
+		return isAuthor;
+	}
+
+	public void setAuthor(boolean isAuthor) {
+		this.isAuthor = isAuthor;
 	}
 
 }
