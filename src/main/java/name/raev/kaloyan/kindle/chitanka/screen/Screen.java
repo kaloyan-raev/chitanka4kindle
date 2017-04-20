@@ -37,7 +37,7 @@ import com.amazon.kindle.kindlet.ui.KindletUIResources;
 import name.raev.kaloyan.kindle.chitanka.ConnectivityManager;
 import name.raev.kaloyan.kindle.chitanka.ContextManager;
 import name.raev.kaloyan.kindle.chitanka.DialogManager;
-import name.raev.kaloyan.kindle.chitanka.OpdsPage;
+import name.raev.kaloyan.kindle.chitanka.model.Page;
 import name.raev.kaloyan.kindle.chitanka.utils.ProgressIndicator;
 import name.raev.kaloyan.kindle.chitanka.widget.KPager;
 
@@ -59,14 +59,14 @@ public abstract class Screen {
 			KindletUIResources.KFontFamilyName.SANS_SERIF, 10,
 			KindletUIResources.KFontStyle.PLAIN, true);
 
-	protected OpdsPage opdsPage;
+	protected Page page;
 
 	protected int pageIndex;
 
 	private KPager pager;
 
-	Screen(String opdsUrl) {
-		opdsPage = new OpdsPage(opdsUrl);
+	Screen(Page page) {
+		this.page = page;
 	}
 
 	protected abstract void createContent(Container container) throws IOException;
@@ -138,7 +138,7 @@ public abstract class Screen {
 	}
 
 	protected int getTotalPages() throws IOException {
-		return (opdsPage.getItemsCount() - 1) / getPageSize() + 1;
+		return (page.getItemsCount() - 1) / getPageSize() + 1;
 	}
 
 	public void nextPage() {
@@ -148,7 +148,7 @@ public abstract class Screen {
 
 		ProgressIndicator.start();
 		try {
-			int count = opdsPage.getItemsCount();
+			int count = page.getItemsCount();
 			if (count - pageIndex > getPageSize()) {
 				pageIndex += getPageSize();
 				updateScreen();
@@ -223,10 +223,6 @@ public abstract class Screen {
 		ContextManager.getContext().getRootContainer().repaint();
 	}
 
-	public String getUrl() {
-		return opdsPage.getUrl();
-	}
-
 	/**
 	 * The default implementation sets the focus to the first focusable widget.
 	 */
@@ -253,7 +249,7 @@ public abstract class Screen {
 	}
 	
 	protected String getPageTitle() throws IOException {
-		String title = opdsPage.getTitle();
+		String title = page.getTitle();
 		
 		int index = title.indexOf(" — страница");
 		if (index != -1) {

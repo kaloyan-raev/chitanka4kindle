@@ -27,13 +27,14 @@ import java.io.IOException;
 import com.amazon.kindle.kindlet.ui.KLabel;
 import com.amazon.kindle.kindlet.ui.KPanel;
 
-import name.raev.kaloyan.kindle.chitanka.OpdsItem;
+import name.raev.kaloyan.kindle.chitanka.model.Item;
+import name.raev.kaloyan.kindle.chitanka.model.Page;
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
 public class LongListScreen extends Screen {
 
-	LongListScreen(String opdsUrl) {
-		super(opdsUrl);
+	LongListScreen(Page page) {
+		super(page);
 	}
 
 	protected int getPageSize() {
@@ -54,9 +55,9 @@ public class LongListScreen extends Screen {
 		container.add(title, c);
 
 		// add item links
-		OpdsItem[] items = opdsPage.getItems(pageIndex, getPageSize());
+		Item[] items = page.getItems(pageIndex, getPageSize());
 		for (int i = 0; i < items.length; i++) {
-			OpdsItem item = items[i];
+			Item item = items[i];
 
 			KActionLabel label = new KActionLabel(item.getTitle());
 			label.setFont(FONT_LINK);
@@ -74,14 +75,14 @@ public class LongListScreen extends Screen {
 	}
 
 	protected void updateContent(Container container) throws IOException {
-		OpdsItem[] opdsItems = opdsPage.getItems(pageIndex, getPageSize());
+		Item[] items = page.getItems(pageIndex, getPageSize());
 
 		Component[] components = container.getComponents();
 		for (int i = 1; i < components.length - 1; i++) {
 			KActionLabel titleLabel = (KActionLabel) components[i];
-			if (i - 1 < opdsItems.length) {
-				OpdsItem opdsItem = opdsItems[i - 1];
-				titleLabel.setText(opdsItem.getTitle());
+			if (i - 1 < items.length) {
+				Item item = items[i - 1];
+				titleLabel.setText(item.getTitle());
 				titleLabel.setFocusable(true);
 			} else {
 				titleLabel.setText("");

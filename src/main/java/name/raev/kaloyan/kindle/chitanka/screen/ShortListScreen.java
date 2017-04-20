@@ -18,6 +18,7 @@
  */
 package name.raev.kaloyan.kindle.chitanka.screen;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -26,13 +27,14 @@ import java.io.IOException;
 import com.amazon.kindle.kindlet.ui.KLabel;
 import com.amazon.kindle.kindlet.ui.KPanel;
 
-import name.raev.kaloyan.kindle.chitanka.OpdsItem;
+import name.raev.kaloyan.kindle.chitanka.model.Item;
+import name.raev.kaloyan.kindle.chitanka.model.Page;
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
 public class ShortListScreen extends Screen {
 	
-	ShortListScreen(String opdsUrl) {
-		super(opdsUrl);
+	ShortListScreen(Page page) {
+		super(page);
 	}
 
 	protected int getPageSize() {
@@ -53,12 +55,16 @@ public class ShortListScreen extends Screen {
 		container.add(title, c);
 
 		// add item links
-		OpdsItem[] items = opdsPage.getItems();
+		Item[] items = page.getItems();
 		for (int i = 0; i < items.length; i++) {
-			final OpdsItem item = items[i];
+			final Item item = items[i];
 
 			KActionLabel label = new KActionLabel(item.getTitle());
 			label.setFont(FONT_LINK);
+			if (!item.isEnabled()) {
+				label.setEnabled(false);
+				label.setForeground(Color.GRAY);
+			}
 			container.add(label, c);
 
 			label.addActionListener(new LinkActionListener(this, i));

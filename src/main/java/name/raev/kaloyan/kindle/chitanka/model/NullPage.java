@@ -16,40 +16,34 @@
  * You should have received a copy of the GNU General Public License
  * along with chitanka4kindle.  If not, see <http://www.gnu.org/licenses/>.
  */
-package name.raev.kaloyan.kindle.chitanka.screen;
+package name.raev.kaloyan.kindle.chitanka.model;
 
-import java.awt.Container;
-import java.awt.GridBagConstraints;
 import java.io.IOException;
 
-import com.amazon.kindle.kindlet.ui.KLabel;
+public class NullPage implements Page {
 
-import name.raev.kaloyan.kindle.chitanka.model.NullPage;
-
-public class SplashScreen extends Screen {
-
-	public SplashScreen() {
-		super(new NullPage());
+	public String getTitle() throws IOException {
+		return null;
 	}
 
-	protected int getPageSize() {
-		return 1;
+	public String getSubtitle() throws IOException {
+		return null;
 	}
 
-	protected void createContent(Container container) throws IOException {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.gridy = GridBagConstraints.RELATIVE;
-		c.weightx = 1.0;
-		c.weighty = 1.0;
-
-		KLabel label = new KLabel("Зарежда се…");
-		container.add(label, c);
+	public int getItemsCount() throws IOException {
+		return 0;
 	}
 
-	protected void updateContent(Container container) {
-		// nothing to update
+	public Item[] getItems() throws IOException {
+		return new Item[0];
+	}
+
+	public Item[] getItems(int index, int length) throws IOException {
+		return new Item[0];
+	}
+
+	public Item getItem(int index) {
+		return null;
 	}
 
 }

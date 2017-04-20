@@ -30,13 +30,14 @@ import com.amazon.kindle.kindlet.ui.KLabel;
 import com.amazon.kindle.kindlet.ui.KLabelMultiline;
 import com.amazon.kindle.kindlet.ui.KPanel;
 
-import name.raev.kaloyan.kindle.chitanka.OpdsItem;
+import name.raev.kaloyan.kindle.chitanka.model.Item;
+import name.raev.kaloyan.kindle.chitanka.model.Page;
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
 public class BookListScreen extends Screen {
 
-	BookListScreen(String opdsUrl) {
-		super(opdsUrl);
+	BookListScreen(Page page) {
+		super(page);
 	}
 
 	protected int getPageSize() {
@@ -58,11 +59,11 @@ public class BookListScreen extends Screen {
 		container.add(title, c);
 
 		KLabel total = new KLabel("Общо ".concat(Integer.toString(
-				opdsPage.getItemsCount()).concat(" заглавия")));
+				page.getItemsCount()).concat(" заглавия")));
 		total.setFont(FONT_PAGE_SUBTITLE);
 		container.add(total, c);
 
-		OpdsItem[] opdsItems = opdsPage.getItems(pageIndex, getPageSize());
+		Item[] items = page.getItems(pageIndex, getPageSize());
 
 		final KPanel content = new KPanel(new GridBagLayout());
 
@@ -96,14 +97,14 @@ public class BookListScreen extends Screen {
 			titleLabel.setFont(FONT_LINK);
 			content.add(titleLabel, cTitle);
 
-			if (i < opdsItems.length) {
-				OpdsItem opdsItem = opdsItems[i];
+			if (i < items.length) {
+				Item item = items[i];
 
 				indexLabel.setText(Integer.toString(pageIndex + i + 1).concat(
 						"."));
-				image.setImage(opdsItem.getImage(), false);
+				image.setImage(item.getImage(), false);
 
-				titleLabel.setText(opdsItem.getTitle());
+				titleLabel.setText(item.getTitle());
 				titleLabel.setFocusable(true);
 
 				titleLabel.addActionListener(new LinkActionListener(this, i));
@@ -120,7 +121,7 @@ public class BookListScreen extends Screen {
 	}
 
 	protected void updateContent(Container container) throws IOException {
-		OpdsItem[] opdsItems = opdsPage.getItems(pageIndex, getPageSize());
+		Item[] items = page.getItems(pageIndex, getPageSize());
 
 		KPanel content = (KPanel) container.getComponent(2);
 		Component[] components = content.getComponents();
@@ -128,14 +129,14 @@ public class BookListScreen extends Screen {
 			KLabel indexLabel = (KLabel) components[i];
 			KImage image = (KImage) components[i + 1];
 			KActionLabel titleLabel = (KActionLabel) components[i + 2];
-			if (i / 3 < opdsItems.length) {
-				OpdsItem opdsItem = opdsItems[i / 3];
+			if (i / 3 < items.length) {
+				Item item = items[i / 3];
 
 				indexLabel.setText(Integer.toString(pageIndex + (i / 3) + 1)
 						.concat("."));
-				image.setImage(opdsItem.getImage(), false);
+				image.setImage(item.getImage(), false);
 
-				titleLabel.setText(opdsItem.getTitle());
+				titleLabel.setText(item.getTitle());
 				titleLabel.setFocusable(true);
 			} else {
 				indexLabel.setText("");

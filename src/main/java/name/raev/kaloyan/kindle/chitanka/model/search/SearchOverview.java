@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with chitanka4kindle.  If not, see <http://www.gnu.org/licenses/>.
  */
-package name.raev.kaloyan.kindle.chitanka.search;
+package name.raev.kaloyan.kindle.chitanka.model.search;
 
 import java.io.BufferedReader;
 import java.io.IOException;

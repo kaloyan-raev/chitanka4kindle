@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with chitanka4kindle.  If not, see <http://www.gnu.org/licenses/>.
  */
-package name.raev.kaloyan.kindle.chitanka;
+package name.raev.kaloyan.kindle.chitanka.model.opds;
 
 import java.awt.Image;
 import java.io.IOException;
@@ -26,11 +26,12 @@ import java.util.List;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndLink;
 
+import name.raev.kaloyan.kindle.chitanka.model.Item;
 import name.raev.kaloyan.kindle.chitanka.screen.Screen;
 import name.raev.kaloyan.kindle.chitanka.utils.ImageLoader;
 import name.raev.kaloyan.kindle.chitanka.utils.Network;
 
-public class OpdsItem {
+public class OpdsItem implements Item {
 
 	private SyndEntry entry;
 
@@ -68,6 +69,10 @@ public class OpdsItem {
 		return null;
 	}
 	
+	public boolean isEnabled() {
+		return true;
+	}
+
 	private String replace(String str, String text, String replacement) {
 		int i = str.indexOf(text);
 		if (i != -1) {

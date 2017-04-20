@@ -76,7 +76,7 @@ public class ChitankaKindlet extends AbstractKindlet {
 		} catch (IOException e) {
 			// nothing to do
 		}
-		ConnectivityManager.getInstance().display(ConnectivityManager.BASE_URL.concat("/catalog.opds"));
+		ConnectivityManager.getInstance().navigateTo("/catalog.opds");
 	}
 
 }

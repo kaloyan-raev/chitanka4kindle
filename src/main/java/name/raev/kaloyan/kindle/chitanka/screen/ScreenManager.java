@@ -21,20 +21,25 @@ package name.raev.kaloyan.kindle.chitanka.screen;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import name.raev.kaloyan.kindle.chitanka.model.opds.OpdsPage;
+import name.raev.kaloyan.kindle.chitanka.model.search.SearchOverviewPage;
+import name.raev.kaloyan.kindle.chitanka.model.search.SearchPersonsPage;
+
 public class ScreenManager {
 
 	private static Screen currentScreen;
 
 	public static Screen createScreen(String url) {
 		try {
-			String path = new URL(url).getPath();
+			URL u = new URL(url);
+			String path = u.getPath();
 
 			if ("/catalog.opds".equals(path)) {
-				return new HomeScreen(url);
+				return new HomeScreen(new OpdsPage(url));
 			} else if ("/authors.opds".equals(path)
 					|| "/translators.opds".equals(path)
 					|| "/books.opds".equals(path) || "/texts.opds".equals(path)) {
-				return new ShortListScreen(url);
+				return new ShortListScreen(new OpdsPage(url));
 			} else if ("/authors/first-name.opds".equals(path)
 					|| "/authors/last-name.opds".equals(path)
 					|| "/translators/first-name.opds".equals(path)
@@ -43,7 +48,7 @@ public class ScreenManager {
 					|| "/texts/alpha.opds".equals(path)
 					|| "/series.opds".equals(path)
 					|| "/sequences.opds".equals(path)) {
-				return new AlphaScreen(url);
+				return new AlphaScreen(new OpdsPage(url));
 			} else if ("/books/category.opds".equals(path)
 					|| "/texts/label.opds".equals(path)
 					|| "/texts/type.opds".equals(path)
@@ -52,16 +57,21 @@ public class ScreenManager {
 					|| path.indexOf("/last-name/") != -1
 					|| path.indexOf("/series/alpha/") != -1
 					|| path.indexOf("/sequences/alpha/") != -1) {
-				return new LongListScreen(url);
+				return new LongListScreen(new OpdsPage(url));
 			} else if (path.indexOf("/search.json") != -1) {
-				return new SearchScreen(url);
+				String query = u.getQuery();
+				if (query.endsWith("&filter=persons")) {
+					return new LongListScreen(new SearchPersonsPage(url));
+				} else {
+					return new ShortListScreen(new SearchOverviewPage(url));
+				}
 			}
 		} catch (MalformedURLException e) {
 			// return the default screen
 		}
 
 		// default screen
-		return new BookListScreen(url);
+		return new BookListScreen(new OpdsPage(url));
 	}
 
 	public static void setCurrentScreen(Screen screen) {
