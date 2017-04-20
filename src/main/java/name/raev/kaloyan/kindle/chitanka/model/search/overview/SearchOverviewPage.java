@@ -55,7 +55,9 @@ public class SearchOverviewPage extends SearchPage {
 					new SearchOverviewItem("Поредици", getOverview().getSequences(),
 							"/search.json?q=" + getQuery() + "&filter=sequences"),
 					new SearchOverviewItem("Серии", getOverview().getSeries(),
-							"/search.json?q=" + getQuery() + "&filter=series") };
+							"/search.json?q=" + getQuery() + "&filter=series"),
+					new SearchOverviewItem("Етикети", getOverview().getLabels(),
+							"/search.json?q=" + getQuery() + "&filter=labels") };
 		}
 		return items;
 	}

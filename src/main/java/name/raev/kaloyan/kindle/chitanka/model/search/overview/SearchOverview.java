@@ -34,6 +34,7 @@ public class SearchOverview extends SearchParser {
 	private int books = 0;
 	private int series = 0;
 	private int sequences = 0;
+	private int labels = 0;
 	private int categories = 0;
 
 	public SearchOverview(String url) throws IOException, ParseException {
@@ -45,7 +46,7 @@ public class SearchOverview extends SearchParser {
 	}
 
 	public int getTotal() {
-		return books + texts + persons + categories + sequences + series;
+		return persons + texts + books + series + sequences + labels + categories;
 	}
 
 	public int getPersons() {
@@ -66,6 +67,10 @@ public class SearchOverview extends SearchParser {
 
 	public int getSequences() {
 		return sequences;
+	}
+
+	public int getLabels() {
+		return labels;
 	}
 
 	public int getCategories() {
@@ -91,6 +96,8 @@ public class SearchOverview extends SearchParser {
 						series++;
 					} else if ("sequences".equals(parentKey)) {
 						sequences++;
+					} else if ("labels".equals(parentKey)) {
+						labels++;
 					} else if ("categories".equals(parentKey)) {
 						categories++;
 					}

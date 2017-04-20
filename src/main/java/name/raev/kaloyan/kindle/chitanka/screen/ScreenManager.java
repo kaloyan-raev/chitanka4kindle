@@ -23,6 +23,7 @@ import java.net.URL;
 
 import name.raev.kaloyan.kindle.chitanka.model.opds.OpdsPage;
 import name.raev.kaloyan.kindle.chitanka.model.search.category.SearchCategoriesPage;
+import name.raev.kaloyan.kindle.chitanka.model.search.label.SearchLabelsPage;
 import name.raev.kaloyan.kindle.chitanka.model.search.overview.SearchOverviewPage;
 import name.raev.kaloyan.kindle.chitanka.model.search.person.SearchPersonsPage;
 import name.raev.kaloyan.kindle.chitanka.model.search.sequence.SearchSequencesPage;
@@ -74,6 +75,8 @@ public class ScreenManager {
 					return new LongListScreen(new SearchSequencesPage(url));
 				} else if (query.endsWith("&filter=series")) {
 					return new LongListScreen(new SearchSeriesPage(url));
+				} else if (query.endsWith("&filter=labels")) {
+					return new LongListScreen(new SearchLabelsPage(url));
 				} else {
 					return new ShortListScreen(new SearchOverviewPage(url));
 				}
