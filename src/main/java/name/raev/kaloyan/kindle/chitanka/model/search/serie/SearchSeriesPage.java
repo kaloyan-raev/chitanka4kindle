@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with chitanka4kindle.  If not, see <http://www.gnu.org/licenses/>.
  */
-package name.raev.kaloyan.kindle.chitanka.model.search.sequence;
+package name.raev.kaloyan.kindle.chitanka.model.search.serie;
 
 import java.io.IOException;
 
@@ -25,38 +25,38 @@ import org.json.simple.parser.ParseException;
 import name.raev.kaloyan.kindle.chitanka.model.Item;
 import name.raev.kaloyan.kindle.chitanka.model.search.SearchPage;
 
-public class SearchSequencesPage extends SearchPage {
+public class SearchSeriesPage extends SearchPage {
 
-	private Sequence[] sequences;
+	private Serie[] series;
 	private Item[] items;
 
-	public SearchSequencesPage(String url) {
+	public SearchSeriesPage(String url) {
 		super(url);
 	}
 
 	public String getTitle() throws IOException {
-		return "Поредици с „" + getQuery() + "“";
+		return "Серии с „" + getQuery() + "“";
 	}
 
 	public Item[] getItems() throws IOException {
 		if (items == null) {
-			items = new Item[getSequences().length];
+			items = new Item[getSeries().length];
 			for (int i = 0; i < items.length; i++) {
-				items[i] = new SequenceItem(getSequences()[i]);
+				items[i] = new SerieItem(getSeries()[i]);
 			}
 		}
 		return items;
 	}
 
-	private Sequence[] getSequences() throws IOException {
-		if (sequences == null) {
+	private Serie[] getSeries() throws IOException {
+		if (series == null) {
 			try {
-				sequences = new SearchSequences(url).getSequences();
+				series = new SearchSeries(url).getSeries();
 			} catch (ParseException e) {
 				throw new IOException(e.getMessage());
 			}
 		}
-		return sequences;
+		return series;
 	}
 
 }

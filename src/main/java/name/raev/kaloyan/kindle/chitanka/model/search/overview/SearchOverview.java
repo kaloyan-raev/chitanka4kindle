@@ -32,6 +32,7 @@ public class SearchOverview extends SearchParser {
 	private int persons = 0;
 	private int texts = 0;
 	private int books = 0;
+	private int series = 0;
 	private int sequences = 0;
 	private int categories = 0;
 
@@ -44,7 +45,7 @@ public class SearchOverview extends SearchParser {
 	}
 
 	public int getTotal() {
-		return books + texts + persons + categories + sequences;
+		return books + texts + persons + categories + sequences + series;
 	}
 
 	public int getPersons() {
@@ -57,6 +58,10 @@ public class SearchOverview extends SearchParser {
 
 	public int getBooks() {
 		return books;
+	}
+
+	public int getSeries() {
+		return series;
 	}
 
 	public int getSequences() {
@@ -78,17 +83,15 @@ public class SearchOverview extends SearchParser {
 					String parentKey = (String) objects.elementAt(objects.size() - 2);
 					if ("persons".equals(parentKey)) {
 						persons++;
-					}
-					if ("texts".equals(parentKey)) {
+					} else if ("texts".equals(parentKey)) {
 						texts++;
-					}
-					if ("books".equals(parentKey)) {
+					} else if ("books".equals(parentKey)) {
 						books++;
-					}
-					if ("sequences".equals(parentKey)) {
+					} else if ("series".equals(parentKey)) {
+						series++;
+					} else if ("sequences".equals(parentKey)) {
 						sequences++;
-					}
-					if ("categories".equals(parentKey)) {
+					} else if ("categories".equals(parentKey)) {
 						categories++;
 					}
 				}
