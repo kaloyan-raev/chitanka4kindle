@@ -22,11 +22,11 @@ import java.awt.Image;
 
 import name.raev.kaloyan.kindle.chitanka.model.Item;
 
-public class SearchPersonsItem implements Item {
+public class PersonItem implements Item {
 
 	private Person person;
 
-	SearchPersonsItem(Person person) {
+	PersonItem(Person person) {
 		this.person = person;
 	}
 
@@ -40,12 +40,10 @@ public class SearchPersonsItem implements Item {
 	}
 
 	public String getDownloadLink() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public Image getImage() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import name.raev.kaloyan.kindle.chitanka.model.opds.OpdsPage;
+import name.raev.kaloyan.kindle.chitanka.model.search.SearchCategoriesPage;
 import name.raev.kaloyan.kindle.chitanka.model.search.SearchOverviewPage;
 import name.raev.kaloyan.kindle.chitanka.model.search.SearchPersonsPage;
 
@@ -62,6 +63,8 @@ public class ScreenManager {
 				String query = u.getQuery();
 				if (query.endsWith("&filter=persons")) {
 					return new LongListScreen(new SearchPersonsPage(url));
+				} else if (query.endsWith("&filter=categories")) {
+					return new LongListScreen(new SearchCategoriesPage(url));
 				} else {
 					return new ShortListScreen(new SearchOverviewPage(url));
 				}

@@ -26,23 +26,23 @@ import org.json.simple.parser.ParseException;
 import name.raev.kaloyan.kindle.chitanka.model.Item;
 import name.raev.kaloyan.kindle.chitanka.model.Page;
 
-public class SearchPersonsPage implements Page {
+public class SearchCategoriesPage implements Page {
 
 	private String url;
 	private String query;
-	private Person[] persons;
+	private Category[] categories;
 	private Item[] items;
 
-	public SearchPersonsPage(String url) {
+	public SearchCategoriesPage(String url) {
 		this.url = url;
 	}
 
 	public String getTitle() throws IOException {
-		return "Автори и преводачи с „" + getQuery() + "“";
+		return "Категории с „" + getQuery() + "“";
 	}
 
 	public String getSubtitle() throws IOException {
-		return "Общо " + getPersons().length + " резултата";
+		return "Общо " + getCategories().length + " резултата";
 	}
 
 	public int getItemsCount() throws IOException {
@@ -51,9 +51,9 @@ public class SearchPersonsPage implements Page {
 
 	public Item[] getItems() throws IOException {
 		if (items == null) {
-			items = new Item[getPersons().length];
+			items = new Item[getCategories().length];
 			for (int i = 0; i < items.length; i++) {
-				items[i] = new PersonItem(getPersons()[i]);
+				items[i] = new CategoryItem(getCategories()[i]);
 			}
 		}
 		return items;
@@ -78,15 +78,15 @@ public class SearchPersonsPage implements Page {
 		return query;
 	}
 	
-	private Person[] getPersons() throws IOException {
-		if (persons == null) {
+	private Category[] getCategories() throws IOException {
+		if (categories == null) {
 			try {
-				persons = new SearchPersons(url).getPersons();
+				categories = new SearchCategories(url).getCategories();
 			} catch (ParseException e) {
 				throw new IOException(e.getMessage());
 			}
 		}
-		return persons;
+		return categories;
 	}
 
 }
