@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with chitanka4kindle.  If not, see <http://www.gnu.org/licenses/>.
  */
-package name.raev.kaloyan.kindle.chitanka.model.search;
+package name.raev.kaloyan.kindle.chitanka.model.search.category;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,18 +32,18 @@ import org.json.simple.parser.ParseException;
 
 import name.raev.kaloyan.kindle.chitanka.utils.Network;
 
-public class SearchPersons {
+public class SearchCategories {
 
 	private Stack objects = new Stack();
 
-	private List persons = new ArrayList();
+	private List categories = new ArrayList();
 
-	public SearchPersons(String url) throws IOException, ParseException {
+	public SearchCategories(String url) throws IOException, ParseException {
 		parse(url);
 	}
 
-	public Person[] getPersons() {
-		return (Person[]) persons.toArray(new Person[persons.size()]);
+	public Category[] getCategories() {
+		return (Category[]) categories.toArray(new Category[categories.size()]);
 	}
 
 	private void parse(String url) throws IOException, ParseException {
@@ -62,12 +62,12 @@ public class SearchPersons {
 			}
 
 			public boolean endArray() throws ParseException, IOException {
-				return !"persons".equals(objects.peek());
+				return !"categories".equals(objects.peek());
 			}
 
 			public boolean startObject() throws ParseException, IOException {
-				if (!objects.isEmpty() && "persons".equals(objects.peek())) {
-					persons.add(new Person());
+				if (!objects.isEmpty() && "categories".equals(objects.peek())) {
+					categories.add(new Category());
 				}
 				return true;
 			}
@@ -90,21 +90,21 @@ public class SearchPersons {
 				String key = (String) objects.peek();
 				if ("slug".equals(key)) {
 					String parentKey = (String) objects.elementAt(objects.size() - 2);
-					if ("persons".equals(parentKey)) {
-						Person last = (Person) persons.get(persons.size() - 1);
+					if ("categories".equals(parentKey)) {
+						Category last = (Category) categories.get(categories.size() - 1);
 						last.setSlug((String) value);
 					}
 				} else if ("name".equals(key)) {
 					String parentKey = (String) objects.elementAt(objects.size() - 2);
-					if ("persons".equals(parentKey)) {
-						Person last = (Person) persons.get(persons.size() - 1);
+					if ("categories".equals(parentKey)) {
+						Category last = (Category) categories.get(categories.size() - 1);
 						last.setName((String) value);
 					}
-				} else if ("isAuthor".equals(key)) {
+				} else if ("nrOfBooks".equals(key)) {
 					String parentKey = (String) objects.elementAt(objects.size() - 2);
-					if ("persons".equals(parentKey)) {
-						Person last = (Person) persons.get(persons.size() - 1);
-						last.setAuthor(((Boolean) value).booleanValue());
+					if ("categories".equals(parentKey)) {
+						Category last = (Category) categories.get(categories.size() - 1);
+						last.setNumberOfBooks(((Long) value).intValue());
 					}
 				}
 				return true;

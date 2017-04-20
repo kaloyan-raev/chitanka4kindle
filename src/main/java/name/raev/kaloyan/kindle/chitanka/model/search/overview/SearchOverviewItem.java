@@ -16,36 +16,44 @@
  * You should have received a copy of the GNU General Public License
  * along with chitanka4kindle.  If not, see <http://www.gnu.org/licenses/>.
  */
-package name.raev.kaloyan.kindle.chitanka.model.search;
+package name.raev.kaloyan.kindle.chitanka.model.search.overview;
 
-public class Person {
+import java.awt.Image;
 
-	private String slug;
-	private String name;
-	private boolean isAuthor;
+import name.raev.kaloyan.kindle.chitanka.model.Item;
 
-	public String getSlug() {
-		return slug;
+public class SearchOverviewItem implements Item {
+
+	private String text;
+	private int count;
+	private String link;
+
+	SearchOverviewItem(String text, int count, String link) {
+		this.text = text;
+		this.count = count;
+		this.link = link;
 	}
 
-	public void setSlug(String slug) {
-		this.slug = slug;
+	public String getTitle() {
+		return text + " (" + count + ")";
 	}
 
-	public String getName() {
-		return name;
+	public String getNavigationLink() {
+		return link;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public String getDownloadLink() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	public boolean isAuthor() {
-		return isAuthor;
+	public Image getImage() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	public void setAuthor(boolean isAuthor) {
-		this.isAuthor = isAuthor;
+	public boolean isEnabled() {
+		return count > 0;
 	}
 
 }

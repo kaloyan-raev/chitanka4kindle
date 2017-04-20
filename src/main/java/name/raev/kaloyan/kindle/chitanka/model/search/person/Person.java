@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with chitanka4kindle.  If not, see <http://www.gnu.org/licenses/>.
  */
-package name.raev.kaloyan.kindle.chitanka.model.search;
+package name.raev.kaloyan.kindle.chitanka.model.search.person;
 
-public class Category {
+public class Person {
 
 	private String slug;
 	private String name;
-	private int nrOfBooks;
+	private boolean isAuthor;
 
 	public String getSlug() {
 		return slug;
@@ -40,12 +40,12 @@ public class Category {
 		this.name = name;
 	}
 
-	public int getNumberOfBooks() {
-		return nrOfBooks;
+	public boolean isAuthor() {
+		return isAuthor;
 	}
 
-	public void setNumberOfBooks(int nrOfBooks) {
-		this.nrOfBooks = nrOfBooks;
+	public void setAuthor(boolean isAuthor) {
+		this.isAuthor = isAuthor;
 	}
 
 }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with chitanka4kindle.  If not, see <http://www.gnu.org/licenses/>.
  */
-package name.raev.kaloyan.kindle.chitanka.model.search;
+package name.raev.kaloyan.kindle.chitanka.model.search.person;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,23 +26,23 @@ import org.json.simple.parser.ParseException;
 import name.raev.kaloyan.kindle.chitanka.model.Item;
 import name.raev.kaloyan.kindle.chitanka.model.Page;
 
-public class SearchCategoriesPage implements Page {
+public class SearchPersonsPage implements Page {
 
 	private String url;
 	private String query;
-	private Category[] categories;
+	private Person[] persons;
 	private Item[] items;
 
-	public SearchCategoriesPage(String url) {
+	public SearchPersonsPage(String url) {
 		this.url = url;
 	}
 
 	public String getTitle() throws IOException {
-		return "Категории с „" + getQuery() + "“";
+		return "Автори и преводачи с „" + getQuery() + "“";
 	}
 
 	public String getSubtitle() throws IOException {
-		return "Общо " + getCategories().length + " резултата";
+		return "Общо " + getPersons().length + " резултата";
 	}
 
 	public int getItemsCount() throws IOException {
@@ -51,9 +51,9 @@ public class SearchCategoriesPage implements Page {
 
 	public Item[] getItems() throws IOException {
 		if (items == null) {
-			items = new Item[getCategories().length];
+			items = new Item[getPersons().length];
 			for (int i = 0; i < items.length; i++) {
-				items[i] = new CategoryItem(getCategories()[i]);
+				items[i] = new PersonItem(getPersons()[i]);
 			}
 		}
 		return items;
@@ -78,15 +78,15 @@ public class SearchCategoriesPage implements Page {
 		return query;
 	}
 	
-	private Category[] getCategories() throws IOException {
-		if (categories == null) {
+	private Person[] getPersons() throws IOException {
+		if (persons == null) {
 			try {
-				categories = new SearchCategories(url).getCategories();
+				persons = new SearchPersons(url).getPersons();
 			} catch (ParseException e) {
 				throw new IOException(e.getMessage());
 			}
 		}
-		return categories;
+		return persons;
 	}
 
 }

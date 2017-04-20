@@ -16,14 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with chitanka4kindle.  If not, see <http://www.gnu.org/licenses/>.
  */
-package name.raev.kaloyan.kindle.chitanka.model.search;
+package name.raev.kaloyan.kindle.chitanka.model.search.overview;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 import org.json.simple.parser.ContentHandler;
@@ -32,18 +30,47 @@ import org.json.simple.parser.ParseException;
 
 import name.raev.kaloyan.kindle.chitanka.utils.Network;
 
-public class SearchCategories {
+public class SearchOverview {
 
 	private Stack objects = new Stack();
 
-	private List categories = new ArrayList();
+	private String query = null;
+	private int persons = 0;
+	private int texts = 0;
+	private int books = 0;
+	private int sequences = 0;
+	private int categories = 0;
 
-	public SearchCategories(String url) throws IOException, ParseException {
+	public SearchOverview(String url) throws IOException, ParseException {
 		parse(url);
 	}
 
-	public Category[] getCategories() {
-		return (Category[]) categories.toArray(new Category[categories.size()]);
+	public String getQuery() {
+		return query;
+	}
+
+	public int getTotal() {
+		return books + texts + persons + categories + sequences;
+	}
+
+	public int getPersons() {
+		return persons;
+	}
+
+	public int getTexts() {
+		return texts;
+	}
+
+	public int getBooks() {
+		return books;
+	}
+
+	public int getSequences() {
+		return sequences;
+	}
+
+	public int getCategories() {
+		return categories;
 	}
 
 	private void parse(String url) throws IOException, ParseException {
@@ -62,13 +89,10 @@ public class SearchCategories {
 			}
 
 			public boolean endArray() throws ParseException, IOException {
-				return !"categories".equals(objects.peek());
+				return true;
 			}
 
 			public boolean startObject() throws ParseException, IOException {
-				if (!objects.isEmpty() && "categories".equals(objects.peek())) {
-					categories.add(new Category());
-				}
 				return true;
 			}
 
@@ -88,23 +112,24 @@ public class SearchCategories {
 
 			public boolean primitive(Object value) throws ParseException, IOException {
 				String key = (String) objects.peek();
-				if ("slug".equals(key)) {
+				if ("text".equals(key)) {
+					query = (String) value;
+				} else if ("id".equals(key)) {
 					String parentKey = (String) objects.elementAt(objects.size() - 2);
-					if ("categories".equals(parentKey)) {
-						Category last = (Category) categories.get(categories.size() - 1);
-						last.setSlug((String) value);
+					if ("persons".equals(parentKey)) {
+						persons++;
 					}
-				} else if ("name".equals(key)) {
-					String parentKey = (String) objects.elementAt(objects.size() - 2);
-					if ("categories".equals(parentKey)) {
-						Category last = (Category) categories.get(categories.size() - 1);
-						last.setName((String) value);
+					if ("texts".equals(parentKey)) {
+						texts++;
 					}
-				} else if ("nrOfBooks".equals(key)) {
-					String parentKey = (String) objects.elementAt(objects.size() - 2);
+					if ("books".equals(parentKey)) {
+						books++;
+					}
+					if ("sequences".equals(parentKey)) {
+						sequences++;
+					}
 					if ("categories".equals(parentKey)) {
-						Category last = (Category) categories.get(categories.size() - 1);
-						last.setNumberOfBooks(((Long) value).intValue());
+						categories++;
 					}
 				}
 				return true;

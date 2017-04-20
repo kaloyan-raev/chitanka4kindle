@@ -22,9 +22,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import name.raev.kaloyan.kindle.chitanka.model.opds.OpdsPage;
-import name.raev.kaloyan.kindle.chitanka.model.search.SearchCategoriesPage;
-import name.raev.kaloyan.kindle.chitanka.model.search.SearchOverviewPage;
-import name.raev.kaloyan.kindle.chitanka.model.search.SearchPersonsPage;
+import name.raev.kaloyan.kindle.chitanka.model.search.category.SearchCategoriesPage;
+import name.raev.kaloyan.kindle.chitanka.model.search.overview.SearchOverviewPage;
+import name.raev.kaloyan.kindle.chitanka.model.search.person.SearchPersonsPage;
 
 public class ScreenManager {
 
