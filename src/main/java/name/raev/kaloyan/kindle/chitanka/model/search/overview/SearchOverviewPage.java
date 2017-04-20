@@ -19,22 +19,19 @@
 package name.raev.kaloyan.kindle.chitanka.model.search.overview;
 
 import java.io.IOException;
-import java.net.URL;
 
 import org.json.simple.parser.ParseException;
 
 import name.raev.kaloyan.kindle.chitanka.model.Item;
-import name.raev.kaloyan.kindle.chitanka.model.Page;
+import name.raev.kaloyan.kindle.chitanka.model.search.SearchPage;
 
-public class SearchOverviewPage implements Page {
+public class SearchOverviewPage extends SearchPage {
 
-	private String url;
-	private String query;
 	private SearchOverview overview;
 	private Item[] items;
 
 	public SearchOverviewPage(String url) {
-		this.url = url;
+		super(url);
 	}
 
 	public String getTitle() throws IOException {
@@ -43,10 +40,6 @@ public class SearchOverviewPage implements Page {
 
 	public String getSubtitle() throws IOException {
 		return "Общо " + getOverview().getTotal() + " резултата";
-	}
-
-	public int getItemsCount() throws IOException {
-		return getItems().length;
 	}
 
 	public Item[] getItems() throws IOException {
@@ -65,24 +58,6 @@ public class SearchOverviewPage implements Page {
 		return items;
 	}
 
-	public Item[] getItems(int index, int length) throws IOException {
-		Item[] result = new Item[length];
-		System.arraycopy(getItems(), index, result, 0, length);
-		return result;
-	}
-
-	public Item getItem(int index) throws IOException {
-		return getItems()[index];
-	}
-
-	private String getQuery() throws IOException {
-		if (query == null) {
-			String urlQuery = new URL(url).getQuery();
-			query = urlQuery.substring(urlQuery.indexOf('=') + 1);
-		}
-		return query;
-	}
-	
 	private SearchOverview getOverview() throws IOException {
 		if (overview == null) {
 			try {

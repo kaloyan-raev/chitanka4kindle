@@ -19,34 +19,23 @@
 package name.raev.kaloyan.kindle.chitanka.model.search.person;
 
 import java.io.IOException;
-import java.net.URL;
 
 import org.json.simple.parser.ParseException;
 
 import name.raev.kaloyan.kindle.chitanka.model.Item;
-import name.raev.kaloyan.kindle.chitanka.model.Page;
+import name.raev.kaloyan.kindle.chitanka.model.search.SearchPage;
 
-public class SearchPersonsPage implements Page {
+public class SearchPersonsPage extends SearchPage {
 
-	private String url;
-	private String query;
 	private Person[] persons;
 	private Item[] items;
 
 	public SearchPersonsPage(String url) {
-		this.url = url;
+		super(url);
 	}
 
 	public String getTitle() throws IOException {
 		return "Автори и преводачи с „" + getQuery() + "“";
-	}
-
-	public String getSubtitle() throws IOException {
-		return "Общо " + getPersons().length + " резултата";
-	}
-
-	public int getItemsCount() throws IOException {
-		return getItems().length;
 	}
 
 	public Item[] getItems() throws IOException {
@@ -59,25 +48,6 @@ public class SearchPersonsPage implements Page {
 		return items;
 	}
 
-	public Item[] getItems(int index, int length) throws IOException {
-		int len = Math.min(length, getItems().length - index);
-		Item[] result = new Item[len];
-		System.arraycopy(getItems(), index, result, 0, len);
-		return result;
-	}
-
-	public Item getItem(int index) throws IOException {
-		return getItems()[index];
-	}
-
-	private String getQuery() throws IOException {
-		if (query == null) {
-			String urlQuery = new URL(url).getQuery();
-			query = urlQuery.substring(urlQuery.indexOf('=') + 1, urlQuery.indexOf('&'));
-		}
-		return query;
-	}
-	
 	private Person[] getPersons() throws IOException {
 		if (persons == null) {
 			try {

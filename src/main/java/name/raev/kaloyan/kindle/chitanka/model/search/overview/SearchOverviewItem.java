@@ -43,12 +43,10 @@ public class SearchOverviewItem implements Item {
 	}
 
 	public String getDownloadLink() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public Image getImage() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
