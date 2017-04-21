@@ -29,11 +29,8 @@ import name.raev.kaloyan.kindle.chitanka.model.Item;
 import name.raev.kaloyan.kindle.chitanka.model.Page;
 import name.raev.kaloyan.kindle.chitanka.utils.ImageLoader;
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
-import name.raev.kaloyan.kindle.chitanka.widget.KSearchField;
 
 public class HomeScreen extends Screen {
-
-	private KSearchField search;
 
 	HomeScreen(Page page) {
 		super(page);
@@ -46,7 +43,6 @@ public class HomeScreen extends Screen {
 	protected void createContent(Container container) throws IOException {
 		addLogo(container);
 		addLinks(container);
-		addSearch(container);
 	}
 
 	protected void updateContent(Container container) {
@@ -89,18 +85,6 @@ public class HomeScreen extends Screen {
 
 			label.addActionListener(new LinkActionListener(this, i));
 		}
-	}
-
-	private void addSearch(Container container) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.gridy = GridBagConstraints.RELATIVE;
-		c.weightx = 1.0;
-		c.weighty = 1.0;
-
-		search = new KSearchField();
-		container.add(search, c);
 	}
 
 }

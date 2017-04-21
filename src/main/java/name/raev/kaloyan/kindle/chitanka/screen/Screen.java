@@ -23,6 +23,7 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -37,9 +38,11 @@ import com.amazon.kindle.kindlet.ui.KindletUIResources;
 import name.raev.kaloyan.kindle.chitanka.ConnectivityManager;
 import name.raev.kaloyan.kindle.chitanka.ContextManager;
 import name.raev.kaloyan.kindle.chitanka.DialogManager;
+import name.raev.kaloyan.kindle.chitanka.model.NullPage;
 import name.raev.kaloyan.kindle.chitanka.model.Page;
 import name.raev.kaloyan.kindle.chitanka.utils.ProgressIndicator;
 import name.raev.kaloyan.kindle.chitanka.widget.KPager;
+import name.raev.kaloyan.kindle.chitanka.widget.KSearchField;
 
 public abstract class Screen {
 	
@@ -63,6 +66,7 @@ public abstract class Screen {
 
 	protected int pageIndex;
 
+	protected KSearchField search;
 	private KPager pager;
 
 	Screen(Page page) {
@@ -93,10 +97,16 @@ public abstract class Screen {
 			// call the subclass to create the main content of the page
 			createContent(content);
 
+			// add the search field, but not on the splash screen
+			if (!(page instanceof NullPage)) {
+				createSearch(container);
+			}
+
+			// add the pager
+			createPager(container);
+
 			// reset keyboard focus
 			resetFocus(content);
-
-			createPager(container);
 		} catch (IOException e) {
 			throw e;
 		} catch (Throwable t) {
@@ -119,6 +129,18 @@ public abstract class Screen {
 		container.add(content, c);
 
 		return content;
+	}
+
+	private void createSearch(Container container) {
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1.0;
+		c.weighty = 0.0;
+		c.gridx = 0;
+		c.gridy = GridBagConstraints.RELATIVE;
+		c.insets = new Insets(20, 8, 10, 8);
+		search = new KSearchField();
+		container.add(search, c);
 	}
 
 	private void createPager(Container container) throws IOException {

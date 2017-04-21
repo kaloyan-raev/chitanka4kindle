@@ -56,7 +56,7 @@ public class KSearchField extends KBorderedPanel {
 	}
 
 	public KSearchField(String initialText) {
-		text = new KTextField(initialText, 16);
+		text = new KTextField(initialText, 18);
 		text.setHint("Въведете поне 3 символа");
 		text.setMargin(new Insets(0, 20, 0, 20));
 		add(text);
