@@ -86,10 +86,11 @@ public class LongListScreen extends Screen {
 		Item[] items = page.getItems(pageIndex, getPageSize());
 
 		Component[] components = container.getComponents();
-		for (int i = 1; i < components.length - 1; i++) {
+		int startIndex = (page.getSubtitle() == null) ? 1 : 2;
+		for (int i = startIndex; i < components.length - 1; i++) {
 			KActionLabel titleLabel = (KActionLabel) components[i];
-			if (i - 1 < items.length) {
-				Item item = items[i - 1];
+			if (i - startIndex < items.length) {
+				Item item = items[i - startIndex];
 				titleLabel.setText(item.getTitle());
 				titleLabel.setFocusable(true);
 			} else {
