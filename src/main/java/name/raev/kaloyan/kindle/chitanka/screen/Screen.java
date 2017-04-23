@@ -106,7 +106,7 @@ public abstract class Screen {
 			createPager(container);
 
 			// reset keyboard focus
-			resetFocus(content);
+			resetFocus(container);
 		} catch (IOException e) {
 			throw e;
 		} catch (Throwable t) {
@@ -250,18 +250,16 @@ public abstract class Screen {
 	 */
 	protected boolean resetFocus(Container container) {
 		Component[] components = container.getComponents();
-		
+
 		for (int i = 0; i < components.length; i++) {
 			Component component = components[i];
-			
+
 			// check children recursively
-			if (component instanceof Container) {
-				Container c = (Container) component;
+			if (component instanceof KPanel) {
+				KPanel c = (KPanel) component;
 				if (resetFocus(c))
 					return true;
-			}
-			
-			if (component.isFocusable()) {
+			} else if (component.isFocusable() && component.isEnabled()) {
 				component.requestFocus();
 				return true;
 			}
