@@ -84,23 +84,24 @@ public abstract class Screen {
 		
 		Container container = ContextManager.getContext().getRootContainer();
 
-		// clear the content of the container
-		container.removeAll();
-
 		container.setLayout(new GridBagLayout());
 
 		try {
-			KPanel content = createContentPanel(container);
+			KPanel content = createContentPanel();
 
 			pageIndex = 0;
-			
+
 			// call the subclass to create the main content of the page
 			createContent(content);
 
+			// clear the content of the container
+			container.removeAll();
+
+			// add the content panel
+			addContentPanel(container, content);
+
 			// add the search field, but not on the splash screen
-			if (!(page instanceof NullPage)) {
-				createSearch(container);
-			}
+			createSearch(container);
 
 			// add the pager
 			createPager(container);
@@ -117,30 +118,32 @@ public abstract class Screen {
 		container.repaint();
 	}
 
-	private KPanel createContentPanel(Container container) {
+	private KPanel createContentPanel() {
+		return new KPanel(new GridBagLayout());
+	}
+
+	private void addContentPanel(Container container, KPanel content) {
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 1.0;
 		c.weighty = 1.0;
 		c.gridx = 0;
 		c.gridy = GridBagConstraints.RELATIVE;
-
-		KPanel content = new KPanel(new GridBagLayout());
 		container.add(content, c);
-
-		return content;
 	}
 
 	private void createSearch(Container container) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1.0;
-		c.weighty = 0.0;
-		c.gridx = 0;
-		c.gridy = GridBagConstraints.RELATIVE;
-		c.insets = new Insets(20, 8, 10, 8);
-		search = new KSearchField();
-		container.add(search, c);
+		if (!(page instanceof NullPage)) {
+			GridBagConstraints c = new GridBagConstraints();
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.weightx = 1.0;
+			c.weighty = 0.0;
+			c.gridx = 0;
+			c.gridy = GridBagConstraints.RELATIVE;
+			c.insets = new Insets(20, 8, 10, 8);
+			search = new KSearchField();
+			container.add(search, c);
+		}
 	}
 
 	private void createPager(Container container) throws IOException {
@@ -233,9 +236,11 @@ public abstract class Screen {
 				updateContent(content);
 			} else {
 				// perhaps an error was displayed - recreate the screen
-				container.removeAll();
-				content = createContentPanel(container);
+				content = createContentPanel();
 				createContent(content);
+				container.removeAll();
+				addContentPanel(container, content);
+				createSearch(container);
 				createPager(container);
 			}
 
