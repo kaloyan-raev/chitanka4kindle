@@ -25,14 +25,15 @@ import java.io.IOException;
 
 import com.amazon.kindle.kindlet.ui.KImage;
 
-import name.raev.kaloyan.kindle.chitanka.OpdsItem;
+import name.raev.kaloyan.kindle.chitanka.model.Item;
+import name.raev.kaloyan.kindle.chitanka.model.Page;
 import name.raev.kaloyan.kindle.chitanka.utils.ImageLoader;
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
 public class HomeScreen extends Screen {
 
-	HomeScreen(String opdsUrl) {
-		super(opdsUrl);
+	HomeScreen(Page page) {
+		super(page);
 	}
 
 	protected int getPageSize() {
@@ -46,6 +47,11 @@ public class HomeScreen extends Screen {
 
 	protected void updateContent(Container container) {
 		// nothing to update
+	}
+
+	protected boolean resetFocus(Container container) {
+		search.requestFocus();
+		return true;
 	}
 
 	private void addLogo(Container container) {
@@ -67,9 +73,9 @@ public class HomeScreen extends Screen {
 		c.weightx = 1.0;
 		c.weighty = 1.0;
 
-		OpdsItem[] items = opdsPage.getItems();
+		Item[] items = page.getItems();
 		for (int i = 0; i < items.length; i++) {
-			final OpdsItem item = items[i];
+			final Item item = items[i];
 
 			KActionLabel label = new KActionLabel(item.getTitle());
 			label.setFont(FONT_LINK);

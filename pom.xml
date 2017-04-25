@@ -21,7 +21,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>name.raev.kaloyan.kindle</groupId>
 	<artifactId>chitanka</artifactId>
-	<version>1.2.0</version>
+	<version>1.3.0-SNAPSHOT</version>
 	<name>Читанка</name>
 	<description>Позволява разглеждане и сваляне на книги от каталога Читанка директно от Kindle без необходимост от компютър</description>
 	<build>
@@ -196,6 +196,11 @@
 			<groupId>rome</groupId>
 			<artifactId>rome</artifactId>
 			<version>1.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
 		</dependency>
 	</dependencies>
 	<repositories>

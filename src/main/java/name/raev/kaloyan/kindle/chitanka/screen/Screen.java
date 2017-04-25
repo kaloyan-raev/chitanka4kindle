@@ -23,6 +23,7 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -37,9 +38,11 @@ import com.amazon.kindle.kindlet.ui.KindletUIResources;
 import name.raev.kaloyan.kindle.chitanka.ConnectivityManager;
 import name.raev.kaloyan.kindle.chitanka.ContextManager;
 import name.raev.kaloyan.kindle.chitanka.DialogManager;
-import name.raev.kaloyan.kindle.chitanka.OpdsPage;
+import name.raev.kaloyan.kindle.chitanka.model.NullPage;
+import name.raev.kaloyan.kindle.chitanka.model.Page;
 import name.raev.kaloyan.kindle.chitanka.utils.ProgressIndicator;
 import name.raev.kaloyan.kindle.chitanka.widget.KPager;
+import name.raev.kaloyan.kindle.chitanka.widget.KSearchField;
 
 public abstract class Screen {
 	
@@ -59,14 +62,15 @@ public abstract class Screen {
 			KindletUIResources.KFontFamilyName.SANS_SERIF, 10,
 			KindletUIResources.KFontStyle.PLAIN, true);
 
-	protected OpdsPage opdsPage;
+	protected Page page;
 
 	protected int pageIndex;
 
+	protected KSearchField search;
 	private KPager pager;
 
-	Screen(String opdsUrl) {
-		opdsPage = new OpdsPage(opdsUrl);
+	Screen(Page page) {
+		this.page = page;
 	}
 
 	protected abstract void createContent(Container container) throws IOException;
@@ -93,11 +97,16 @@ public abstract class Screen {
 			// call the subclass to create the main content of the page
 			createContent(content);
 
-			// set the focus on the first focusable widget in the created
-			// content
-			setFocusOnFirst(content);
+			// add the search field, but not on the splash screen
+			if (!(page instanceof NullPage)) {
+				createSearch(container);
+			}
 
+			// add the pager
 			createPager(container);
+
+			// reset keyboard focus
+			resetFocus(container);
 		} catch (IOException e) {
 			throw e;
 		} catch (Throwable t) {
@@ -122,6 +131,18 @@ public abstract class Screen {
 		return content;
 	}
 
+	private void createSearch(Container container) {
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1.0;
+		c.weighty = 0.0;
+		c.gridx = 0;
+		c.gridy = GridBagConstraints.RELATIVE;
+		c.insets = new Insets(20, 8, 10, 8);
+		search = new KSearchField();
+		container.add(search, c);
+	}
+
 	private void createPager(Container container) throws IOException {
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -138,8 +159,8 @@ public abstract class Screen {
 		return pageIndex / getPageSize() + 1;
 	}
 
-	private int getTotalPages() throws IOException {
-		return (opdsPage.getItemsCount() - 1) / getPageSize() + 1;
+	protected int getTotalPages() throws IOException {
+		return (page.getItemsCount() - 1) / getPageSize() + 1;
 	}
 
 	public void nextPage() {
@@ -149,7 +170,7 @@ public abstract class Screen {
 
 		ProgressIndicator.start();
 		try {
-			int count = opdsPage.getItemsCount();
+			int count = page.getItemsCount();
 			if (count - pageIndex > getPageSize()) {
 				pageIndex += getPageSize();
 				updateScreen();
@@ -173,6 +194,12 @@ public abstract class Screen {
 			}
 		} catch (IOException e) {
 			updatePage();
+		}
+	}
+
+	public void focusOnSearch() {
+		if (search != null) {
+			search.requestFocus();
 		}
 	}
 
@@ -212,7 +239,7 @@ public abstract class Screen {
 				createPager(container);
 			}
 
-			setFocusOnFirst(content);
+			resetFocus(content);
 
 			pager.setPage(getCurrentPage());
 		} catch (IOException e) {
@@ -224,24 +251,21 @@ public abstract class Screen {
 		ContextManager.getContext().getRootContainer().repaint();
 	}
 
-	public String getUrl() {
-		return opdsPage.getUrl();
-	}
-
-	protected boolean setFocusOnFirst(Container container) {
+	/**
+	 * The default implementation sets the focus to the first focusable widget.
+	 */
+	protected boolean resetFocus(Container container) {
 		Component[] components = container.getComponents();
-		
+
 		for (int i = 0; i < components.length; i++) {
 			Component component = components[i];
-			
+
 			// check children recursively
-			if (component instanceof Container) {
-				Container c = (Container) component;
-				if (setFocusOnFirst(c))
+			if (component instanceof KPanel) {
+				KPanel c = (KPanel) component;
+				if (resetFocus(c))
 					return true;
-			}
-			
-			if (component.isFocusable()) {
+			} else if (component.isFocusable() && component.isEnabled()) {
 				component.requestFocus();
 				return true;
 			}
@@ -251,7 +275,7 @@ public abstract class Screen {
 	}
 	
 	protected String getPageTitle() throws IOException {
-		String title = opdsPage.getTitle();
+		String title = page.getTitle();
 		
 		int index = title.indexOf(" — страница");
 		if (index != -1) {

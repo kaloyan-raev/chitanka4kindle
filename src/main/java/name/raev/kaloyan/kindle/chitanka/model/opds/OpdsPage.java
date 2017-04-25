@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with chitanka4kindle.  If not, see <http://www.gnu.org/licenses/>.
  */
-package name.raev.kaloyan.kindle.chitanka;
+package name.raev.kaloyan.kindle.chitanka.model.opds;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,9 +29,11 @@ import com.sun.syndication.feed.synd.SyndLink;
 import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
 
+import name.raev.kaloyan.kindle.chitanka.model.Item;
+import name.raev.kaloyan.kindle.chitanka.model.Page;
 import name.raev.kaloyan.kindle.chitanka.utils.Network;
 
-public class OpdsPage {
+public class OpdsPage implements Page {
 
 	private int itemsCount = Integer.MIN_VALUE;
 	private String url;
@@ -50,6 +52,10 @@ public class OpdsPage {
 	public String getTitle() throws IOException {
 		parseFirstPage();
 		return firstPage.getTitle();
+	}
+
+	public String getSubtitle() throws IOException {
+		return null;
 	}
 
 	public int getItemsCount() throws IOException {
@@ -138,7 +144,7 @@ public class OpdsPage {
 		return null;
 	}
 
-	public OpdsItem[] getItems(int index, int length) throws IOException {
+	public Item[] getItems(int index, int length) throws IOException {
 		while (entries.size() < index + length && parseNextPage());
 
 		OpdsItem[] items = new OpdsItem[Math
@@ -150,14 +156,14 @@ public class OpdsPage {
 		return items;
 	}
 
-	public OpdsItem getItem(int index) {
+	public Item getItem(int index) {
 		if (index < entries.size()) {
 			return new OpdsItem((SyndEntry) entries.get(index));
 		}
 		return null;
 	}
 
-	public OpdsItem[] getItems() throws IOException {
+	public Item[] getItems() throws IOException {
 		return getItems(0, getItemsCount());
 	}
 

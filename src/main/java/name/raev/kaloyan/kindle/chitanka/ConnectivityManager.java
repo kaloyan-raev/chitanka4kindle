@@ -99,19 +99,24 @@ public class ConnectivityManager {
 	}
 
 	public boolean canGoBack() {
-		return !history.isEmpty();
+		return history.size() > 1;
 	}
 
 	public void goBack() {
-		// display the previous page from history
-		display((String) history.pop());
+		if (canGoBack()) {
+			// remove the current page from history
+			history.pop();
+			// display the previous page from history
+			display((String) history.peek());
+		}
 	}
 
 	public void navigateTo(String link) {
-		// push the current page to history
-		history.push(ScreenManager.getCurrentScreen().getUrl());
+		String url = Network.getUrlFromLinkAsString(link);
+		// push to history
+		history.push(url);
 		// navigate to the selected page
-		display(Network.getUrlFromLinkAsString(link));
+		display(url);
 	}
 	
 	public void handleNetworkError() throws InterruptedException {

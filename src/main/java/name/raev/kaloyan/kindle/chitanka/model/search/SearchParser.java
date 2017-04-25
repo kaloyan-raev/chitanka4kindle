@@ -16,40 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with chitanka4kindle.  If not, see <http://www.gnu.org/licenses/>.
  */
-package name.raev.kaloyan.kindle.chitanka.screen;
+package name.raev.kaloyan.kindle.chitanka.model.search;
 
-import java.awt.Container;
-import java.awt.GridBagConstraints;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
-import com.amazon.kindle.kindlet.ui.KLabel;
+import org.json.simple.parser.ContentHandler;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import name.raev.kaloyan.kindle.chitanka.model.NullPage;
+import name.raev.kaloyan.kindle.chitanka.utils.Network;
 
-public class SplashScreen extends Screen {
+public abstract class SearchParser {
+	
+	protected abstract ContentHandler getContentHandler();
 
-	public SplashScreen() {
-		super(new NullPage());
-	}
+	protected void parse(String url) throws IOException, ParseException {
+		Reader reader = new BufferedReader(new InputStreamReader(Network.getInputStream(url)));
 
-	protected int getPageSize() {
-		return 1;
-	}
-
-	protected void createContent(Container container) throws IOException {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.gridy = GridBagConstraints.RELATIVE;
-		c.weightx = 1.0;
-		c.weighty = 1.0;
-
-		KLabel label = new KLabel("Зарежда се…");
-		container.add(label, c);
-	}
-
-	protected void updateContent(Container container) {
-		// nothing to update
+		new JSONParser().parse(reader, getContentHandler());
 	}
 
 }

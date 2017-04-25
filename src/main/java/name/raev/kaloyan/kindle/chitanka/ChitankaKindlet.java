@@ -32,6 +32,8 @@ import name.raev.kaloyan.kindle.chitanka.screen.SplashScreen;
 
 public class ChitankaKindlet extends AbstractKindlet {
 
+	private static final int VK_KEYBOARD = 17;
+
 	public void create(KindletContext context) {
 		ContextManager.setContext(context);
 
@@ -63,6 +65,10 @@ public class ChitankaKindlet extends AbstractKindlet {
 							key.consume();
 							ScreenManager.getCurrentScreen().previousPage();
 							return true;
+
+						case VK_KEYBOARD:
+							ScreenManager.getCurrentScreen().focusOnSearch();
+							return true;
 						}
 
 						return false;
@@ -76,7 +82,7 @@ public class ChitankaKindlet extends AbstractKindlet {
 		} catch (IOException e) {
 			// nothing to do
 		}
-		ConnectivityManager.getInstance().display(ConnectivityManager.BASE_URL.concat("/catalog.opds"));
+		ConnectivityManager.getInstance().navigateTo("/catalog.opds");
 	}
 
 }

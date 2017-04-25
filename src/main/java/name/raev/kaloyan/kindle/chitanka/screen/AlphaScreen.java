@@ -26,13 +26,14 @@ import java.io.IOException;
 import com.amazon.kindle.kindlet.ui.KLabel;
 import com.amazon.kindle.kindlet.ui.KPanel;
 
-import name.raev.kaloyan.kindle.chitanka.OpdsItem;
+import name.raev.kaloyan.kindle.chitanka.model.Item;
+import name.raev.kaloyan.kindle.chitanka.model.Page;
 import name.raev.kaloyan.kindle.chitanka.widget.KActionLabel;
 
 public class AlphaScreen extends Screen {
 	
-	AlphaScreen(String opdsUrl) {
-		super(opdsUrl);
+	AlphaScreen(Page page) {
+		super(page);
 	}
 
 	protected int getPageSize() {
@@ -55,9 +56,9 @@ public class AlphaScreen extends Screen {
 
 		c.gridwidth = 1;
 		// add item links
-		OpdsItem[] items = opdsPage.getItems();
+		Item[] items = page.getItems();
 		for (int i = 0; i < items.length; i++) {
-			final OpdsItem item = items[i];
+			final Item item = items[i];
 
 			KActionLabel label = new KActionLabel(item.getTitle());
 			label.setFont(FONT_LINK);

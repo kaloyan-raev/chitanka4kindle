@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Kaloyan Raev
+ * Copyright 2014-2017 Kaloyan Raev
  * 
  * This file is part of chitanka4kindle.
  * 
@@ -20,9 +20,10 @@ package name.raev.kaloyan.kindle.chitanka.screen;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import name.raev.kaloyan.kindle.chitanka.ConnectivityManager;
-import name.raev.kaloyan.kindle.chitanka.OpdsItem;
+import name.raev.kaloyan.kindle.chitanka.model.Item;
 
 public class LinkActionListener implements ActionListener {
 	
@@ -35,16 +36,19 @@ public class LinkActionListener implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		OpdsItem opdsItem = screen.opdsPage.getItem(screen.pageIndex + index);
-		String link = opdsItem.getNavigationLink();
-		if (link != null) {
-			ConnectivityManager.getInstance().navigateTo(link);
-		} else {
-			link = opdsItem.getDownloadLink();
+		try {
+			Item item = screen.page.getItem(screen.pageIndex + index);
+			String link = item.getNavigationLink();
 			if (link != null) {
-				ConnectivityManager.getInstance().downloadBook(
-						link);
+				ConnectivityManager.getInstance().navigateTo(link);
+			} else {
+				link = item.getDownloadLink();
+				if (link != null) {
+					ConnectivityManager.getInstance().downloadBook(link);
+				}
 			}
+		} catch (IOException ex) {
+			Screen.displayError(ex);
 		}
 	}
 
