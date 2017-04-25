@@ -197,6 +197,12 @@ public abstract class Screen {
 		}
 	}
 
+	public void focusOnSearch() {
+		if (search != null) {
+			search.requestFocus();
+		}
+	}
+
 	private void updatePage() {
 		ProgressIndicator.start();
 		Connectivity connectivity = ContextManager.getContext().getConnectivity();

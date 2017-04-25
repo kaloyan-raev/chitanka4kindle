@@ -32,6 +32,8 @@ import name.raev.kaloyan.kindle.chitanka.screen.SplashScreen;
 
 public class ChitankaKindlet extends AbstractKindlet {
 
+	private static final int VK_KEYBOARD = 17;
+
 	public void create(KindletContext context) {
 		ContextManager.setContext(context);
 
@@ -62,6 +64,10 @@ public class ChitankaKindlet extends AbstractKindlet {
 						case KindleKeyCodes.VK_TURN_PAGE_BACK:
 							key.consume();
 							ScreenManager.getCurrentScreen().previousPage();
+							return true;
+
+						case VK_KEYBOARD:
+							ScreenManager.getCurrentScreen().focusOnSearch();
 							return true;
 						}
 
